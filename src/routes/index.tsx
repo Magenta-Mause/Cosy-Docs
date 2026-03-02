@@ -44,7 +44,7 @@ export function HomePage() {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center text-center px-4 py-24">
-        <img src={cosyLogo} aria-label="cosy header" className="w-[32vw]" />
+        <img src={cosyLogo} alt="Cosy logo" className="w-[32vw]" />
         <p className="mt-6 max-w-xl text-lg text-muted-foreground">
           Easily host your game servers on your own infrastructure.
         </p>
