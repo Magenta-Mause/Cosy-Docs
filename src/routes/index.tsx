@@ -13,7 +13,7 @@ export const Route = createFileRoute("/")({
 
 export function HomePage() {
   const curlCommand =
-    'sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/Magenta-Mause/Cosy/refs/heads/feature/cosy-50-installation-script/install_cosy.sh)" _ docker --domain localhost';
+    'sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/Magenta-Mause/Cosy/refs/heads/main/install_cosy.sh)" _';
   const [copied, setCopied] = useState(false);
 
   async function copyToClipboard() {
