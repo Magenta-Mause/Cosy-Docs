@@ -1,9 +1,9 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { RootProvider } from "fumadocs-ui/provider/tanstack";
 import type * as React from "react";
+import icon from "@/assets/icon.ico?url";
 import SearchDialog from "@/components/search";
 import appCss from "@/styles/app.css?url";
-import icon from "@/assets/icon.ico?url";
 
 export const Route = createRootRoute({
   head: () => ({

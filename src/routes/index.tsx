@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Check, Copy, SquareArrowOutUpRight } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Copy, Check, SquareArrowOutUpRight } from "lucide-react";
-import cosyLogo from "@/assets/props/cosy-logo.gif";
-import cathyGato from "@/assets/props/cathy.gif";
-import houseImg from "@/assets/props/house2.png";
 import bushImg from "@/assets/props/bush.png";
+import cathyGato from "@/assets/props/cathy.gif";
+import cosyLogo from "@/assets/props/cosy-logo.gif";
+import houseImg from "@/assets/props/house2.png";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
