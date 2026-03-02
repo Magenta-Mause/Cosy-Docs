@@ -63,21 +63,19 @@ export function HomePage() {
           </div>
         </div>
         <div className="mt-8 flex gap-4">
-          <a href="/docs">
-            <Button size="lg" className="border-3">
-              Get Started
-            </Button>
-          </a>
+          <Button asChild size="lg" className="border-3">
+            <a href="/docs">Get Started</a>
+          </Button>
 
-          <a
-            href="https://github.com/magenta-Mause/cosy-templates"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button size="lg" className="border-3" variant="secondary">
+          <Button asChild size="lg" className="border-3" variant="secondary">
+            <a
+              href="https://github.com/magenta-Mause/cosy-templates"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Templates
-            </Button>
-          </a>
+            </a>
+          </Button>
         </div>
       </main>
 
