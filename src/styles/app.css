@@ -1,3 +1,465 @@
 @import "tailwindcss";
-@import "fumadocs-ui/css/neutral.css";
-@import "fumadocs-ui/css/preset.css";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --text-xs: 18px;
+  --text-sm: 24px;
+  --text-base: 28px;
+  --text-lg: 32px;
+  --text-xl: 42px;
+  --text-2xl: 52px;
+  --text-3xl: 78px;
+
+  --leading-snug: 1;
+  --leading-normal: 1.125;
+
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-secondary-background: var(--secondary-background);
+  --color-white: var(--white);
+  --color-outline: var(--outline);
+  --color-shadow: var(--shadow);
+  --color-alarm: var(--alarm);
+  --color-accent: var(--accent);
+  --color-border: var(--color-foreground);
+
+  --color-popover: var(--secondary-background);
+  --color-card: var(--color-secondary-background);
+  --color-card-foreground: var(--text);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--color-border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-link: var(--link);
+  --color-primary-modal-background: var(--primary-modal-background);
+  --color-primary-banner: var(--color-secondary-background);
+
+  --color-button-primary-default: var(--button-primary-default);
+  --color-button-primary-hover: var(--button-primary-hover);
+  --color-button-primary-click: var(--button-primary-click);
+  --color-button-primary-disabled: var(--button-primary-disabled);
+  --color-button-primary-focus: var(--button-primary-focus);
+  --color-button-primary-border: var(--button-primary-border);
+  --color-button-primary-inner-shadow: var(--button-primary-inner-shadow);
+  --color-button-primary-active: var(--button-primary-active);
+
+  --color-button-secondary-default: var(--button-secondary-default);
+  --color-button-secondary-hover: var(--button-secondary-hover);
+  --color-button-secondary-click: var(--button-secondary-click);
+  --color-button-secondary-disabled: var(--button-secondary-disabled);
+  --color-button-secondary-disabled-border: var(--button-secondary-disabled-border);
+  --color-button-secondary-focus: var(--button-secondary-focus);
+  --color-button-secondary-border: var(--button-secondary-border);
+
+  --color-button-destructive-default: var(--button-destructive-default);
+  --color-button-destructive-hover: var(--button-destructive-hover);
+  --color-button-destructive-click: var(--button-destructive-click);
+  --color-button-destructive-disabled: var(--button-destructive-disabled);
+  --color-button-destructive-focus: var(--button-destructive-focus);
+  --color-button-destructive-text: var(--button-destructive-text);
+  --color-button-destructive-disabled-text: var(--button-destructive-disabled-text);
+
+  --color-button-drop-shadow: var(--button-drop-shadow);
+
+  --color-icon-primary: var(--icon-primary);
+  --color-icon-foreground: var(--icon-foreground);
+
+  /* RADIUS: Stardew is pixel art, so we want small, blocky corners.
+       4px is basically "2 game pixels" */
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.25);
+}
+
+:root {
+  /* Stardew uses small pixel corners, not large rounded ones */
+  --radius: 0.5rem;
+
+  /* --- LIGHT MODE: DIALOGUE BOX THEME --- */
+
+  /*------- start of design Team colors*/
+
+  /* Background: The cream/tan color of the dialogue boxes */
+  --background: oklch(79.608% 0.11291 58.181);
+  --secondary-background: oklch(88.286% 0.07567 58.775);
+
+  /* Foreground: Deep UI Brown (The text color in menus) */
+  --foreground: oklch(37.839% 0.10139 23.236);
+
+  /* Outline*/
+  --outline: oklab(29.729% 0.08376 0.03852);
+
+  /* Alarm*/
+  --alarm: oklch(55.842% 0.20891 17.11);
+
+  /* Accent*/
+  --accent: oklch(72.99% 0.13226 56.19);
+
+  /* White*/
+  --white: oklch(94.99% 0.01095 63.101);
+
+  /* Shadows*/
+  --shadow: oklch(29.893% 0.11327 316.782);
+
+  --text: oklab(37.839% 0.09316 0.04);
+
+  /*------- end of design Team colors*/
+
+  /* Card: Slightly brighter tan (The inner menu panels) */
+  --card: oklch(0.772 0.068 81.566);
+  --card-foreground: oklch(0.28 0.06 45);
+
+  /* Popover: Same as card */
+  --popover: oklch(0.772 0.068 81.566);
+  --popover-foreground: oklch(0.28 0.06 45);
+
+  /* PRIMARY: The iconic "Wood Button" Orange */
+  --primary: oklch(0.68 0.16 65);
+  --primary-foreground: oklch(0.25 0.05 45); /* Dark brown text on wood */
+  --primary-banner: oklch(0.8829 0.0757 58.81);
+  --primary-modal-background: oklch(0.7961 0.113 58.2);
+
+  /* SECONDARY: The light yellow highlight found in UI corners */
+  --secondary: oklch(0.88 0.12 85);
+  --secondary-foreground: oklch(0.28 0.06 45);
+
+  /* MUTED: Desaturated parchment color */
+  --muted: oklch(0.88 0.04 85);
+  --muted-foreground: oklch(0.5 0.08 45);
+
+  /* ACCENT: The bright "Select" Green (or Spring Grass) */
+  --accent-foreground: oklch(0.98 0.02 145);
+
+  /* DESTRUCTIVE: Health Bar / Heart Red */
+  --destructive: oklch(0.55 0.22 25);
+
+  /* BORDER: The rust-colored outline of the UI boxes */
+  --input: oklch(0.45 0.12 50);
+
+  /* RING: Selection cursor orange */
+  --ring: oklch(0.68 0.16 65);
+
+  /* CHARTS: Seasonal Colors */
+  --chart-1: oklch(0.68 0.16 65); /* Fall Orange */
+  --chart-2: oklch(0.65 0.2 135); /* Spring Green */
+  --chart-3: oklch(0.85 0.15 85); /* Summer Gold */
+  --chart-4: oklch(0.65 0.1 240); /* Winter Blue */
+  --chart-5: oklch(0.6 0.22 340); /* Fruit Purple */
+
+  /* SIDEBAR: Darker wood tone */
+  --sidebar: oklch(0.9 0.06 85);
+  --sidebar-foreground: oklch(0.28 0.06 45);
+  --sidebar-primary: oklch(0.68 0.16 65);
+  --sidebar-primary-foreground: oklch(0.25 0.05 45);
+  --sidebar-accent: oklch(0.85 0.12 85);
+  --sidebar-accent-foreground: oklch(0.28 0.06 45);
+  --sidebar-border: oklch(0.45 0.12 50);
+  --sidebar-ring: oklch(0.68 0.16 65);
+
+  /* ICON */
+  --icon-primary: oklch(0.88 0.08 58.79);
+  --icon-foreground: oklch(0.3 0.09 24.71);
+
+  /* BUTTON */
+  --button-primary-default: oklch(0.3784 0.1014 23.26);
+  --button-primary-hover: oklch(0.5046 0.1213 29.72);
+  --button-primary-click: oklch(0.2973 0.0922 24.71);
+  --button-primary-disabled: oklch(0.6784 0.0818 317.75);
+  --button-primary-focus: oklch(0.3784 0.1014 23.26);
+  --button-primary-border: oklch(0.5046 0.1213 29.72);
+  --button-primary-inner-shadow: oklch(0.2197 0.0776 347.51);
+  --button-primary-active: oklch(0.2973 0.0922 24.71);
+
+  --button-secondary-default: oklch(0.8829 0.0757 58.81);
+  --button-secondary-hover: oklch(0.7961 0.113 58.2);
+  --button-secondary-click: oklch(0.7299 0.1323 56.21);
+  --button-secondary-disabled: oklch(0.864 0.0578 324.23);
+  --button-secondary-disabled-border: oklch(0.6784 0.0818 317.75);
+  --button-secondary-focus: oklch(0.8829 0.0757 58.81);
+  --button-secondary-border: oklch(0.3784 0.1014 23.26);
+
+  --button-destructive-default: oklch(0.5584 0.2089 17.13);
+  --button-destructive-hover: oklch(0.6178 0.0868 5.38);
+  --button-destructive-click: oklch(0.4251 0.1455 13.66);
+  --button-destructive-disabled: oklch(0.8528 0.0563 4.38);
+  --button-destructive-disabled-text: oklch(0.6178 0.0868 5.38);
+  --button-destructive-focus: oklch(0.5584 0.2089 17.13);
+  --button-destructive-text: oklch(0.9499 0.011 63.36);
+
+  --button-drop-shadow: oklch(0.2989 0.1132 316.79 / 60%);
+
+  /* LINK */
+  --link: oklch(0.4317 0.2069 291.76);
+}
+
+.dark {
+  /* --- DARK MODE: NIGHT SKY / MINES THEME --- */
+
+  /* Background: Deep Purple/Blue (Night Sky) */
+  --background: oklch(0.2 0.08 275);
+
+  /* Foreground: Pale Lavender/Cream (Text in dark) */
+  --foreground: oklch(0.92 0.02 280);
+
+  /* Card: Slightly lighter Night Blue */
+  --card: oklch(0.25 0.1 275);
+  --card-foreground: oklch(0.92 0.02 280);
+
+  --popover: oklch(0.25 0.1 275);
+  --popover-foreground: oklch(0.92 0.02 280);
+
+  /* PRIMARY: Lantern Gold/Orange (to pop against the blue) */
+  --primary: oklch(0.75 0.18 75);
+  --primary-foreground: oklch(0.2 0.08 275);
+
+  /* SECONDARY: Muted Night Violet */
+  --secondary: oklch(0.35 0.12 290);
+  --secondary-foreground: oklch(0.92 0.02 280);
+
+  /* MUTED: Deep Cave Blue */
+  --muted: oklch(0.3 0.05 260);
+  --muted-foreground: oklch(0.7 0.05 260);
+
+  /* ACCENT: Bioluminescent Blue/Green */
+  --accent: oklch(0.5 0.15 180);
+  --accent-foreground: oklch(0.95 0.05 180);
+
+  /* DESTRUCTIVE: Combat Red (Brighter for dark mode) */
+  --destructive: oklch(0.6 0.22 25);
+
+  /* BORDER: Dark Blue border */
+  --border: oklch(0.35 0.1 270);
+  --input: oklch(0.35 0.1 270);
+
+  --ring: oklch(0.75 0.18 75);
+
+  /* CHARTS: Glowing versions */
+  --chart-1: oklch(0.75 0.18 75); /* Lantern Gold */
+  --chart-2: oklch(0.6 0.2 150); /* Glow Ring Green */
+  --chart-3: oklch(0.5 0.15 250); /* Crystal Blue */
+  --chart-4: oklch(0.7 0.15 300); /* Amethyst Purple */
+  --chart-5: oklch(0.65 0.22 25); /* Lava Red */
+
+  --sidebar: oklch(0.18 0.08 275);
+  --sidebar-foreground: oklch(0.92 0.02 280);
+  --sidebar-primary: oklch(0.75 0.18 75);
+  --sidebar-primary-foreground: oklch(0.2 0.08 275);
+  --sidebar-accent: oklch(0.35 0.12 290);
+  --sidebar-accent-foreground: oklch(0.92 0.02 280);
+  --sidebar-border: oklch(0.35 0.1 270);
+  --sidebar-ring: oklch(0.75 0.18 75);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .no-spinner::-webkit-inner-spin-button,
+  .no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .no-spinner {
+    -moz-appearance: textfield;
+  }
+}
+
+@font-face {
+  font-family: "Glasstown";
+  src: url("../assets/font-family/glasstown_nbp.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Fipps";
+  src: url("../assets/font-family/FippsRegular-enqx.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+html,
+label {
+  cursor:
+    url("../assets/cursor/cursor-default.png") 0 0,
+    auto;
+}
+:where(html, label):active {
+  cursor:
+    url("../assets/cursor/cursor-clicked.png") 0 0,
+    auto;
+}
+
+body {
+  font-family: "Glasstown", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 0.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Fipps", serif;
+  color: #6e2727;
+}
+
+h1 {
+  font-size: 42px;
+}
+
+h2 {
+  font-size: 30px;
+  line-height: 1.5;
+}
+
+h3 {
+  font-size: 22px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 12px;
+}
+
+h6 {
+  font-size: 10px;
+}
+
+[data-slot="context-menu-item"] {
+  cursor:
+    url("../assets/ai-generated/cursor/cursor-pointer.png") 10 0,
+    pointer;
+}
+
+button,
+a,
+[role="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+input,
+select,
+[data-slot="context-menu-item"],
+[data-slot="command-item"],
+[data-slot="command-item"] * {
+  cursor:
+    url("../assets/cursor/cursor-pointer.png") 0 0,
+    pointer;
+}
+
+[disabled],
+[aria-disabled="true"] {
+  cursor:
+    url("../assets/cursor/cursor-not-allowed.png") 0 0,
+    not-allowed;
+}
+
+[data-loading="true"],
+[data-loading="true"] * {
+  cursor:
+    url("../assets/cursor/cursor-loading/cursor-loading-1.png") 0 0,
+    auto;
+  animation: cursor 800ms infinite;
+}
+
+@keyframes cursor {
+  0% {
+    cursor: url("../assets/cursor/cursor-loading/cursor-loading-1.png"), auto;
+  }
+  14.2% {
+    cursor: url("../assets/cursor/cursor-loading/cursor-loading-2.png"), auto;
+  }
+  28.5% {
+    cursor: url("../assets/cursor/cursor-loading/cursor-loading-3.png"), auto;
+  }
+  42.8% {
+    cursor: url("../assets/cursor/cursor-loading/cursor-loading-4.png"), auto;
+  }
+  57.1% {
+    cursor: url("../assets/cursor/cursor-loading/cursor-loading-5.png"), auto;
+  }
+  71.4% {
+    cursor: url("../assets/cursor/cursor-loading/cursor-loading-6.png"), auto;
+  }
+  85.7% {
+    cursor: url("../assets/cursor/cursor-loading/cursor-loading-7.png"), auto;
+  }
+  100% {
+    cursor: url("../assets/cursor/cursor-loading/cursor-loading-8.png"), auto;
+  }
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: none;
+  position: relative;
+}
+
+/* Keep absolute positioning for dialog close button */
+[data-slot="dialog-close"]:focus-visible {
+  position: absolute;
+}
+
+button:focus-visible:after,
+input:focus-visible:after,
+a:focus-visible:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  /* Use the --ring variable so it changes from orange (day) to gold (night) */
+  /* Also increased thickness slightly for chunkier pixel look */
+  outline: 4px dashed var(--ring);
+  outline-offset: 2px;
+  filter: drop-shadow(2px 2px 0 black); /* Hard pixel shadow */
+}
+
+/* Remove spinners from number inputs */
+input.no-spinner::-webkit-outer-spin-button,
+input.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

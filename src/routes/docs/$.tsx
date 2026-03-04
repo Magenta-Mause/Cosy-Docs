@@ -59,7 +59,7 @@ function Page() {
   const tree = useMemo(() => transformPageTree(data.tree as PageTree.Folder), [data.tree]);
 
   return (
-    <DocsLayout {...baseOptions()} tree={tree}>
+    <DocsLayout {...baseOptions()} themeSwitch={{ enabled: false }} tree={tree}>
       <Content />
     </DocsLayout>
   );
