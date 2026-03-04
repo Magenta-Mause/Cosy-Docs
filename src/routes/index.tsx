@@ -1,11 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Copy, SquareArrowOutUpRight } from "lucide-react";
 import { useState } from "react";
-import bushImg from "@/assets/props/bush.png";
-import cathyGato from "@/assets/props/cathy.gif";
 import cosyLogo from "@/assets/props/cosy-logo.gif";
-import houseImg from "@/assets/props/house2.png";
 import { Button } from "@/components/ui/button";
+import backgroundImg from "@/assets/background.png";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -23,11 +21,18 @@ export function HomePage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div
+      className="flex min-h-screen flex-col"
+      style={{
+        backgroundImage: `url(${backgroundImg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       {/* Header */}
       <header className="bg-button-secondary-default h-fit">
         <div className="mx-auto p-8 flex h-14 items-center justify-between px-4">
-          <h1 className="text-lg font-bold tracking-tight">COSY</h1>
+          <h1 className="!text-[30px] font-bold tracking-tight pt-2">COSY</h1>
           <nav className="flex items-center gap-6 text-sm">
             <a href="/docs" className="hover:text-muted-foreground transition">
               Documentation
@@ -79,28 +84,9 @@ export function HomePage() {
         </div>
       </main>
 
-      {/* images */}
-      <div className="flex justify-between bottom-[-10] mx-6 pointer-events-none select-none">
-        <img src={houseImg} aria-label="cosy house decoration" className="-mb-3 z-999" />
-        <div className="flex gap-4 items-end">
-          <img
-            src={cathyGato}
-            aria-label="el gato"
-            className="-mb-3 z-999"
-            style={{ width: "96px", height: "auto", imageRendering: "pixelated" }}
-          />
-          <img
-            src={bushImg}
-            aria-label="cosy bush"
-            className="-mb-8 z-999"
-            style={{ width: "128px", height: "auto", imageRendering: "pixelated" }}
-          />
-        </div>
-      </div>
-
       {/* Footer */}
       <footer className="bg-button-secondary-default h-fit">
-        <div className="mx-2 px-4 py-8 text-sm">
+        <div className="mx-2 px-4 py-8 pb-4 text-sm">
           <div className="flex flex-col gap-6 md:flex-row md:justify-between">
             <div>
               <h5 className="text-sm">COSY by MedalHeads</h5>
