@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --text-xs: 18px;
   --text-sm: 24px;
@@ -89,7 +87,7 @@
   --color-icon-foreground: var(--icon-foreground);
 
   /* RADIUS: Stardew is pixel art, so we want small, blocky corners.
-       4px is basically "2 game pixels" */
+         4px is basically "2 game pixels" */
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: calc(var(--radius) * 0.75);
   --radius-lg: var(--radius);
@@ -217,68 +215,11 @@
   --link: oklch(0.4317 0.2069 291.76);
 }
 
-.dark {
-  /* --- DARK MODE: NIGHT SKY / MINES THEME --- */
-
-  /* Background: Deep Purple/Blue (Night Sky) */
-  --background: oklch(0.2 0.08 275);
-
-  /* Foreground: Pale Lavender/Cream (Text in dark) */
-  --foreground: oklch(0.92 0.02 280);
-
-  /* Card: Slightly lighter Night Blue */
-  --card: oklch(0.25 0.1 275);
-  --card-foreground: oklch(0.92 0.02 280);
-
-  --popover: oklch(0.25 0.1 275);
-  --popover-foreground: oklch(0.92 0.02 280);
-
-  /* PRIMARY: Lantern Gold/Orange (to pop against the blue) */
-  --primary: oklch(0.75 0.18 75);
-  --primary-foreground: oklch(0.2 0.08 275);
-
-  /* SECONDARY: Muted Night Violet */
-  --secondary: oklch(0.35 0.12 290);
-  --secondary-foreground: oklch(0.92 0.02 280);
-
-  /* MUTED: Deep Cave Blue */
-  --muted: oklch(0.3 0.05 260);
-  --muted-foreground: oklch(0.7 0.05 260);
-
-  /* ACCENT: Bioluminescent Blue/Green */
-  --accent: oklch(0.5 0.15 180);
-  --accent-foreground: oklch(0.95 0.05 180);
-
-  /* DESTRUCTIVE: Combat Red (Brighter for dark mode) */
-  --destructive: oklch(0.6 0.22 25);
-
-  /* BORDER: Dark Blue border */
-  --border: oklch(0.35 0.1 270);
-  --input: oklch(0.35 0.1 270);
-
-  --ring: oklch(0.75 0.18 75);
-
-  /* CHARTS: Glowing versions */
-  --chart-1: oklch(0.75 0.18 75); /* Lantern Gold */
-  --chart-2: oklch(0.6 0.2 150); /* Glow Ring Green */
-  --chart-3: oklch(0.5 0.15 250); /* Crystal Blue */
-  --chart-4: oklch(0.7 0.15 300); /* Amethyst Purple */
-  --chart-5: oklch(0.65 0.22 25); /* Lava Red */
-
-  --sidebar: oklch(0.18 0.08 275);
-  --sidebar-foreground: oklch(0.92 0.02 280);
-  --sidebar-primary: oklch(0.75 0.18 75);
-  --sidebar-primary-foreground: oklch(0.2 0.08 275);
-  --sidebar-accent: oklch(0.35 0.12 290);
-  --sidebar-accent-foreground: oklch(0.92 0.02 280);
-  --sidebar-border: oklch(0.35 0.1 270);
-  --sidebar-ring: oklch(0.75 0.18 75);
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -316,6 +257,7 @@ label {
     url("../assets/cursor/cursor-default.png") 0 0,
     auto;
 }
+
 :where(html, label):active {
   cursor:
     url("../assets/cursor/cursor-clicked.png") 0 0,
