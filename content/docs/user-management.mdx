@@ -12,7 +12,7 @@ There are three roles with different privilege levels:
 
 | Role      | Description                                                                                                                                                                                     |
 | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Owner** | Full system access. Can manage all users (including Admins), assign roles, delete users, and access every server. There is typically one Owner per COSY instance (created during installation). |
+| **Owner** | Full system access. Can manage all users (including Admins), assign roles, delete users, and access every server. There is one Owner per COSY instance (created during installation). |
 | **Admin** | Can manage all servers and Users. Cannot manage other Admins or the Owner. Resource quotas are enforced if configured.                                                                          |
 | **User**  | Standard user with resource limits. Can only access their own servers and servers shared with them via [Access Groups](/docs/features/access-management).                                       |
 
@@ -25,7 +25,7 @@ There are three roles with different privilege levels:
 | Manage users       | Yes                    | Users only      | No       |
 | Assign roles       | Yes                    | No              | No       |
 | Delete users       | Yes (not self)         | Users only      | Self only |
-| Resource quotas    | No limitations enfored | Enforced if set | Enforced |
+| Resource quotas    | No limitations enfored | Enforced if set | Enforced if set |
 
 ## Inviting Users
 
