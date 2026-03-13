@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: cosy-landing-page
-          image: ghcr.io/magenta-mause/cosy-landing-page:v0.0.3
+          image: ghcr.io/magenta-mause/cosy-landing-page:v1.0.0
           ports:
             - containerPort: 80
           resources:
@@ -42,5 +42,6 @@ spec:
             periodSeconds: 10
             failureThreshold: 3
             timeoutSeconds: 2
+
 
 
