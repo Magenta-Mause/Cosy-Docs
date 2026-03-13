@@ -1,0 +1,79 @@
+---
+title: Custom Metrics
+description: How game servers can send custom metrics to COSY.
+icon: Activity
+---
+
+Beyond the standard CPU/memory/network metrics that COSY collects automatically, game servers can send **custom metrics** — like player counts, server health, or any game-specific data.
+
+## How It Works
+
+Each game server container receives auto-generated environment variables including:
+
+- `COSY_CONTAINER_SECRET` — Authentication token
+- `COSY_BASE_URL` — The COSY backend URL
+- `COSY_GAME_SERVER_UUID` — The server's unique ID
+
+A script, plugin or mod inside the container can use these to send metrics to COSY's internal API. For a working example, see the [COSY Minecraft Integration Mod](https://github.com/Magenta-Mause/Cosy-Minecraft-Integration-Mod).
+
+## API Endpoint
+
+```
+PUT /api/internal/game-server/custom-metric/{uuid}
+```
+
+### Headers
+
+| Header          | Value                                |
+| --------------- | ------------------------------------ |
+| `Authorization` | The value of `COSY_CONTAINER_SECRET` |
+| `Content-Type`  | `application/json`                   |
+
+### Request Body
+
+A JSON object with your custom metric key-value pairs:
+
+```json
+{
+  "player_count": 12,
+  "tps": 19.8,
+  "world_size_mb": 1024
+}
+```
+
+Values can be numbers (integers or decimals) or strings. The keys and values are stored alongside the standard metrics and displayed in the dashboard.
+
+### Example: Sending Metrics from a Shell Script
+
+```bash
+#!/bin/bash
+while true; do
+  curl -s -X PUT \
+    "${COSY_BASE_URL}/api/internal/game-server/custom-metric/${COSY_GAME_SERVER_UUID}" \
+    -H "Authorization: ${COSY_CONTAINER_SECRET}" \
+    -H "Content-Type: application/json" \
+    -d '{"player_count": 5, "tps": 20.0}'
+  sleep "${COSY_METRICS_PERIOD_SECONDS:-10}"
+done
+```
+
+### Testing the Connection
+
+You can verify that your container can reach the COSY backend:
+
+```
+GET /api/internal/game-server/test-connection/{uuid}
+Authorization: <COSY_CONTAINER_SECRET>
+```
+
+Returns `true` if the secret is valid and the server exists.
+
+## Security
+
+- The `COSY_CONTAINER_SECRET` is regenerated every time the server starts
+- Only the container itself knows its secret — it cannot be read from the COSY UI
+- The internal API endpoint is not protected by JWT authentication but uses the container secret instead
+
+## Viewing Custom Metrics
+
+Custom metrics are stored in InfluxDB and support the same time-range queries as built-in metrics. However, they don't appear automatically — you need to add them manually from the Metrics or [Dashboard](/docs/features/dashboard) settings page to make them visible on the respective view.

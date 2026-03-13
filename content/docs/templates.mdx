@@ -1,0 +1,125 @@
+---
+title: Templates
+description: Pre-configured game server templates for quick setup.
+icon: LayoutTemplate
+---
+
+Templates let you create game servers without needing to configure all the technical details by yourself. Instead of manually configuring the Docker image, ports, environment variables, and commands, you select a template and COSY fills in everything for you.
+
+## How Templates Work
+
+COSY fetches templates from the [cosy-templates](https://github.com/Magenta-Mause/cosy-templates) repository via an external Template Service. Templates are defined as YAML files, validated against a JSON schema, and synced periodically.
+
+Each template specifies:
+
+- **Docker image** name and tag
+- **Port mappings** (TCP/UDP)
+- **Environment variables** (with support for user-configurable variables)
+- **File mounts** for persistent storage
+- **Resource limits** (CPU and memory)
+- **Execution command** (optional)
+
+## Available Templates
+
+Templates are organized by game in the `templates/` directory. The list below is fetched live from the template service:
+
+<TemplateList />
+
+The collection is community-maintained — new games and variations are added through pull requests.
+
+## Using a Template
+
+Templates are selected during the server creation process. For a detailed walkthrough, see [Your First Game Server](/docs/getting-started/first-game-server).
+
+In short: create a new server, pick a game, select a template, fill in any template variables (e.g., memory allocation, player limits), and create the server. You can modify any template-provided setting after creation through the server's [configuration](/docs/configuration) page.
+
+## Template Variables
+
+Templates can define **variables** — user-configurable inputs that get substituted into environment variables using `{{placeholder}}` syntax.
+
+For example, the Minecraft Fabric template defines a `version` variable. When you fill in `1.21.2`, the environment variable `VERSION` is set to `1.21.2` inside the container.
+
+Variable types:
+
+| Type      | Description                                       |
+| --------- | ------------------------------------------------- |
+| `string`  | Free text input (optionally validated with regex) |
+| `number`  | Numeric input                                     |
+| `boolean` | True/false toggle                                 |
+| `select`  | Dropdown with predefined options                  |
+
+Each variable can also specify:
+
+- **`regex`** — A regular expression to validate user input (string type only). For example, `\d\.\d+\.\d+` ensures a valid version number like `1.1.6`.
+- **`default`** — A default value that is pre-filled when creating the server.
+- **`example`** — An example value shown as a hint in the input field.
+- **`options`** — A list of allowed values (required for the `select` type).
+
+## Contributing Templates
+
+If you'd like to request a template for a game that isn't supported yet, you can [open a template request issue](https://github.com/Magenta-Mause/cosy-templates/issues/new?template=01-template-request.yaml). If you want to contribute one yourself, submit a pull request to the [cosy-templates](https://github.com/Magenta-Mause/cosy-templates) repository.
+
+Templates must be placed at `templates/{game-name}/{template-description}.yaml` using lowercase letters and dashes.
+
+### Template Format
+
+```yaml
+# yaml-language-server: $schema=../../schema/template.schema.json
+name: Minecraft Fabric
+description: Minecraft Fabric Server with default fabric installation
+game_id: 38365
+docker_image_name: itzg/minecraft-server
+docker_image_tag: latest
+
+variables:
+  - name: Minecraft Version
+    type: string
+    regex: \d\.\d+\.\d+
+    placeholder: version
+    example: "1.21.2"
+  - name: Memory Allocation (in Gigabyte)
+    type: string
+    placeholder: memory
+    example: "4"
+    default: "6"
+
+environment_variables:
+  VERSION: "{{version}}"
+  EULA: "true"
+  TYPE: "FABRIC"
+  MODRINTH_PROJECTS: "fabric-api"
+  MEMORY: "{{memory}}G"
+
+port_mapping:
+  "25565/tcp": 25565
+
+file_mounts:
+  - /data
+
+resource_limit:
+  memory: 6GiB
+  cpu: 3
+```
+
+### Required Fields
+
+| Field               | Description                                                             |
+| ------------------- | ----------------------------------------------------------------------- |
+| `name`              | Human-readable template name                                            |
+| `description`       | Brief description (max 500 characters)                                  |
+| `game_id`           | Game ID from the [COSY Game API](https://cosy-game-api.jannekeipert.de) |
+| `docker_image_name` | Docker image (e.g., `itzg/minecraft-server`)                            |
+| `docker_image_tag`  | Image tag (e.g., `latest`)                                              |
+
+### Optional Fields
+
+| Field                      | Description                                                  |
+| -------------------------- | ------------------------------------------------------------ |
+| `variables`                | User-configurable inputs with `{{placeholder}}` substitution |
+| `environment_variables`    | Key-value pairs passed to the container                      |
+| `port_mapping`             | Port mappings as `'host_port/protocol': container_port`      |
+| `file_mounts`              | Persistent volume paths (must start with `/`)                |
+| `resource_limit`           | Memory (e.g., `6GiB`) and CPU (e.g., `3`) limits             |
+| `docker_execution_command` | Custom container startup command                             |
+
+All templates are validated against a JSON schema in CI before they can be merged.

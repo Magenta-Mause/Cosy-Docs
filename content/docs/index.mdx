@@ -1,34 +1,87 @@
 ---
-title: Hello World
-description: Your favourite docs framework.
-icon: Rocket
+title: COSY Documentation
+description: Everything you need to know to install, configure, and manage your game servers with COSY.
+icon: BookOpen
 ---
 
-Hey there! Fumadocs is the docs framework that also works on Tanstack Start!
+Welcome to the **COSY** documentation. COSY (Cost Optimized Server Yard) is a self-hosted platform for managing game servers through a beautiful, gamified web interface.
 
-## Heading
-
-Hello World!
+## Getting Started
 
 <Cards>
   <Card
-    title="Learn more about Tanstack Start"
-    href="https://tanstack.com/start"
+    title="Installation"
+    href="/docs/installation"
+    description="Install COSY on your server using Docker or Kubernetes."
   />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
+  <Card
+    title="Your First Game Server"
+    href="/docs/getting-started/first-game-server"
+    description="Create and launch your first game server step by step."
+  />
 </Cards>
 
-### CodeBlock
+## Core Concepts
 
-```ts
-console.log('Hello World');
-```
+<Cards>
+  <Card
+    title="Game Server Abstraction"
+    href="/docs/getting-started/cosy-concept"
+    description="Understand how COSY maps game servers to Docker containers."
+  />
+  <Card
+    title="Templates"
+    href="/docs/templates"
+    description="Use pre-configured templates to spin up servers in seconds."
+  />
+  <Card
+    title="Configuration"
+    href="/docs/configuration"
+    description="Customize images, ports, environment variables, volumes, and more."
+  />
+</Cards>
 
-#### Table
+## Management
 
-| Head                            | Description                         |
-| ------------------------------- | ----------------------------------- |
-| `hello`                         | Hello World                         |
-| very **important**              | Hey                                 |
-| _Surprisingly_                  | Fumadocs                            |
-| very long text that looks weird | hello world hello world hello world |
+<Cards>
+  <Card
+    title="User Management"
+    href="/docs/user-management"
+    description="Invite users, assign roles, and set resource limits."
+  />
+  <Card
+    title="Access Management"
+    href="/docs/features/access-management"
+    description="Give moderators fine-grained access to your servers."
+  />
+  <Card
+    title="File Management"
+    href="/docs/features/file-management"
+    description="Browse and edit server files from the web UI."
+  />
+</Cards>
+
+## Features
+
+<Cards>
+  <Card
+    title="Dashboard & Metrics"
+    href="/docs/features/dashboard"
+    description="Monitor CPU, memory, and custom metrics in real time."
+  />
+  <Card
+    title="Console"
+    href="/docs/features/console"
+    description="Send commands to your game server directly from the browser."
+  />
+  <Card
+    title="Webhooks"
+    href="/docs/features/webhooks"
+    description="Get notified on Discord, Slack, or n8n when server events happen."
+  />
+  <Card
+    title="Public Dashboard"
+    href="/docs/features/public-dashboard"
+    description="Share server status with your community."
+  />
+</Cards>

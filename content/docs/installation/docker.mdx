@@ -1,0 +1,159 @@
+---
+title: Docker Installation
+description: Install COSY using Docker Compose — interactive walkthrough.
+icon: Container
+---
+
+## Prerequisites
+
+- A Linux server (Ubuntu, Debian, etc.)
+- Docker Engine installed and running
+- Docker Compose plugin (or standalone `docker-compose`)
+- `openssl` or `htpasswd` (from `apache2-utils`) — used to generate credentials during installation
+- Root or sudo access
+
+## Step 1: Run the Installer
+
+Run the [install command](/docs/installation) with the `docker` argument appended:
+
+```bash
+sudo bash -c "$(curl -fsSL ...)" _ docker
+```
+
+The script will display the COSY ASCII logo and launch the interactive installer.
+
+## Step 2: Installation Path
+
+```
+Installation path [default: /opt]:
+```
+
+This is where COSY will store its configuration and game server data. The script creates a `cosy/` subdirectory inside this path (e.g., `/opt/cosy`).
+
+Press **Enter** to accept the default `/opt`, or enter a custom `<installation-path>`.
+
+## Step 3: Admin Username
+
+```
+Admin username [default: admin]:
+```
+
+This is the username for the initial owner account. Press **Enter** to use `admin`, or type a custom name.
+
+## Step 4: Port
+
+```
+Port [default: 80]:
+```
+
+The port COSY's web interface will listen on. If port 80 is already in use, enter a different port.
+
+The script validates that the port is not already in use.
+
+## Step 5: Domain
+
+```
+Domain [default: your-hostname]:
+```
+
+The domain or IP address users will use to access COSY. This is used for CORS configuration. If you're running COSY on a server with a public domain, enter it here (e.g., `cosy.example.com`). If you don't have a domain, you can also use the server's IP address directly. For local testing, set this to `localhost`.
+
+## Step 6: Footer Information (Optional)
+
+```
+Footer full name [default: empty]:
+Footer email [default: empty]:
+Footer phone [default: empty]:
+Footer street [default: empty]:
+Footer city & zip code [default: empty]:
+```
+
+These fields populate a contact footer in the COSY UI. They're entirely optional — press **Enter** to skip each one. The Owner can change these values later through the COSY UI.
+
+> **Note:** Depending on your jurisdiction, you may be required to provide legal contact information (e.g., an imprint) for publicly accessible services. Check your local regulations and fill in the relevant fields if needed.
+
+## What Happens Next
+
+After you answer the prompts, the script automatically:
+
+1. **Runs pre-flight checks** — Verifies Docker, Docker Compose, and port availability
+2. **Creates the directory structure** — `<installation-path>/cosy/config` and `<installation-path>/cosy/volumes`
+3. **Generates credentials** — Random 30-character passwords for PostgreSQL, InfluxDB, Loki, and the admin account
+4. **Downloads config files** — `docker-compose.yml`, nginx configs, and Loki config from GitHub
+5. **Writes the `.env` file** — All configuration in a single environment file
+6. **Starts all services** — Runs `docker compose up -d` and waits for health checks to pass
+7. **Installs a systemd service** — COSY starts automatically on boot
+
+## Step 7: Save Your Credentials
+
+When the installation finishes, you'll see:
+
+```
+╔═══════════════════════════════════════════════════════════╗
+║          COSY installation completed successfully!        ║
+╚═══════════════════════════════════════════════════════════╝
+
+  Installation path:  /opt/cosy
+  Deployment method:  docker
+
+  ── Login Credentials ──────────────────────────────────
+  Username:           admin
+  Password:           <randomly-generated-password>
+
+  ── Access URL ────────────────────────────────────────
+  COSY:               http://your-domain:80
+
+  ⚠  Please save the password above - it will not be shown again.
+```
+
+**Save the password.** It's randomly generated and also stored in the `config/.env` file inside your installation directory alongside all other configuration values.
+
+## Accessing COSY
+
+Open `http://<your-domain>:<port>` in your browser and log in with the admin credentials from the installer output.
+
+## Services
+
+The Docker Compose stack runs 7 services:
+
+| Service           | Image                                 | Purpose                                                   |
+| ----------------- | ------------------------------------- | --------------------------------------------------------- |
+| `cosy-backend`    | `ghcr.io/magenta-mause/cosy-backend`  | Spring Boot application server                            |
+| `cosy-frontend`   | `ghcr.io/magenta-mause/cosy-frontend` | React web interface                                       |
+| `cosy-nginx`      | `nginx:1.25`                          | Reverse proxy (routes `/api` to backend, `/` to frontend) |
+| `cosy-database`   | `postgres:16`                         | PostgreSQL database                                       |
+| `cosy-influx`     | `influxdb:2.7-alpine`                 | Time-series metrics storage                               |
+| `cosy-loki`       | `grafana/loki:2.9.4`                  | Log aggregation                                           |
+| `cosy-loki-nginx` | `nginx:1.25`                          | Authentication proxy for Loki                             |
+
+## Managing COSY
+
+```bash
+# Stop COSY
+sudo systemctl stop cosy
+
+# Start COSY
+sudo systemctl start cosy
+
+# Restart COSY
+sudo systemctl restart cosy
+
+# Check status
+sudo systemctl status cosy
+```
+
+## Viewing Logs
+
+COSY uses the `journald` logging driver:
+
+```bash
+# Backend logs (live)
+journalctl CONTAINER_NAME=cosy-backend -f
+
+# All COSY containers
+journalctl CONTAINER_NAME=cosy-backend CONTAINER_NAME=cosy-frontend CONTAINER_NAME=cosy-nginx -f
+
+# Last 50 backend log lines
+journalctl CONTAINER_NAME=cosy-backend -n 50
+```
+

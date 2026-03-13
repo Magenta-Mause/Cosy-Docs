@@ -1,0 +1,50 @@
+---
+title: Image & Ports
+description: Configure the Docker image and port mappings for your game server.
+icon: Box
+---
+
+## Docker Image
+
+Every game server runs a Docker image. The image is specified by two fields:
+
+- **Image Name** — The repository path of the image (e.g., `itzg/minecraft-server`, `ich777/steamcmd`)
+- **Image Tag** — The version tag (e.g., `latest`, `1.20.4`, `stable`)
+
+Together, these form the full image reference: `itzg/minecraft-server:latest`.
+
+When you start a server, COSY pulls the image if it isn't already cached on the host. You can track the pull progress in real time from the UI.
+
+### Choosing an Image
+
+Most game servers have community-maintained Docker images available on Docker Hub. When using a [template](/docs/templates), the image is pre-configured. For custom setups, search [Docker Hub](https://hub.docker.com) for your game.
+
+## Port Mappings
+
+Ports define how players connect to your game server. Each port mapping consists of:
+
+| Field              | Description                                                   |
+| ------------------ | ------------------------------------------------------------- |
+| **Instance Port**  | The port on your host machine that maps to the container port |
+| **Container Port** | The port inside the container that the game server listens on |
+| **Protocol**       | `TCP` or `UDP` — depends on the game                          |
+
+### Example
+
+A Minecraft server typically uses:
+
+| Container Port | Host Port | Protocol |
+| -------------- | --------- | -------- |
+| 25565          | 25565     | TCP      |
+
+An ARK server might need multiple ports:
+
+| Container Port | Host Port | Protocol |
+| -------------- | --------- | -------- |
+| 7777           | 7777      | UDP      |
+| 7778           | 7778      | UDP      |
+| 27015          | 27015     | UDP      |
+
+### Port Conflicts
+
+Each host port can only be used by one container at a time. If you run multiple servers of the same game, you need to assign different host ports (e.g., 25565, 25566, 25567 for multiple Minecraft servers).

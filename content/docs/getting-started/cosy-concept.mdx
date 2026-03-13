@@ -1,0 +1,54 @@
+---
+title: COSY Concept
+description: Understanding how COSY maps game servers to Docker containers.
+icon: Layers
+---
+
+In COSY, every **game server** is backed by a **Docker container**. COSY abstracts away the complexity of Docker so you can manage game servers through a web interface without touching the command line.
+
+## How It Works
+
+When you create a game server in COSY, the system stores a configuration that defines:
+
+- **Docker image** — Which container image to run (e.g., `itzg/minecraft-server`)
+- **Ports** — Which ports to expose on the host
+- **Environment variables** — Configuration passed into the container
+- **Volumes** — Persistent storage for server files
+- **Resource limits** — CPU and memory constraints
+- **Execution command** — Optional override of the container's default command
+
+When you **start** a game server, COSY:
+
+1. Generates a fresh container secret (used for [custom metrics](/docs/features/custom-metrics) authentication)
+2. Pulls the Docker image if not already cached
+3. Creates a container with the configured settings
+4. Injects [auto-generated environment variables](#auto-generated-environment-variables) into the container
+5. Starts the container and begins streaming logs and metrics
+
+When you **stop** a game server, COSY stops and removes the container. Your data is preserved in the mounted volumes.
+
+## Auto-Generated Environment Variables
+
+COSY automatically injects environment variables like `COSY_GAME_SERVER_UUID`, `COSY_CONTAINER_SECRET`, and others into every game server container. These are set automatically — you don't need to configure them. The `COSY_CONTAINER_SECRET` is regenerated every time the server starts for security.
+
+See [Environment Variables](/docs/configuration/environment-variables) for the full list.
+
+## Container Lifecycle
+
+```
+Created → Starting (image pull) → Running → Stopped
+                                      ↓
+                                   Failed
+```
+
+- **Created** — Configuration exists but the container hasn't been started yet
+- **Starting** — Docker image is being pulled or container is booting
+- **Running** — Container is active, logs and metrics are streaming
+- **Stopped** — Container removed, configured volumes preserved
+- **Failed** — Container crashed or encountered an error
+
+## Data Persistence
+
+Only data stored in paths that are configured as **volume mounts** persists across restarts. Any files written outside of a mounted volume are lost when the container is stopped.
+
+See [Volumes](/docs/configuration/volumes) for details on how to configure volume mounts.

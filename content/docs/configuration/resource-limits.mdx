@@ -1,0 +1,42 @@
+---
+title: Resource Limits
+description: CPU and memory constraints for game servers.
+icon: Gauge
+---
+
+Resource limits control how much of the host machine's CPU and memory a game server container can use. They prevent a single server from consuming all available resources and affecting other servers or the host system.
+
+## Server-Level Limits
+
+Each game server has two configurable limits:
+
+| Limit | Description | Example |
+|---|---|---|
+| **Memory** | Maximum RAM the container can use | 2048 MB |
+| **CPU** | CPU core allocation | 2.0 cores |
+
+These are enforced by Docker at the container level. If a server exceeds its memory limit, the container is killed by the OOM (Out of Memory) killer.
+
+## User-Level Quotas
+
+In addition to per-server limits, COSY enforces **user-level resource quotas**. Each user (especially Quota Users) has a maximum total allocation:
+
+| Quota | Description |
+|---|---|
+| **Memory Limit** | Total memory across all of the user's servers |
+| **CPU Limit** | Total CPU cores across all of the user's servers |
+
+When creating or updating a server, COSY checks that the requested resources don't exceed the user's remaining quota. Admins and Owners can adjust these quotas in [User Management](/docs/user-management).
+
+## Choosing Limits
+
+The right limits depend on the game and expected player count. Some rough guidelines:
+
+| Game | Memory | CPU |
+|---|---|---|
+| Minecraft (small, < 5 players) | 1-2 GB | 1 core |
+| Minecraft (medium, 5-20 players) | 2-4 GB | 2 cores |
+| Minecraft (large, modded) | 4-8 GB | 2-4 cores |
+| ARK: Survival Evolved | 6-12 GB | 2-4 cores |
+
+These are rough estimates — monitor your server's actual usage in the [Dashboard](/docs/features/dashboard) and adjust accordingly.

@@ -1,0 +1,44 @@
+---
+title: Uninstallation
+description: How to completely remove COSY from your server.
+icon: Trash2
+---
+
+## Docker
+
+```bash
+sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/Magenta-Mause/Cosy/v1.0.0/uninstall_cosy.sh)" _ docker
+```
+
+### Options
+
+| Flag | Description | Default |
+|---|---|---|
+| `--path <path>` | Base directory containing the `cosy/` folder | `/opt` |
+| `-y, --yes` | Skip confirmation prompt | — |
+
+### What It Does
+
+1. Stops and removes all containers: `docker compose down --volumes --remove-orphans`
+2. Force-removes any leftover containers with the `cosy-` prefix
+3. Removes the systemd service (if present)
+4. Deletes the entire installation directory
+
+**Warning:** This permanently deletes all data including game server volumes, databases, and configuration files.
+
+## Kubernetes
+
+```bash
+sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/Magenta-Mause/Cosy/v1.0.0/uninstall_cosy.sh)" _ kubernetes
+```
+
+### Options
+
+| Flag | Description | Default |
+|---|---|---|
+| `--namespace <ns>` | Kubernetes namespace to delete | `cosy` |
+| `-y, --yes` | Skip confirmation prompt | — |
+
+### What It Does
+
+Deletes the entire Kubernetes namespace, which removes all deployments, services, secrets, PVCs, and other resources within it.

@@ -1,0 +1,59 @@
+---
+title: Public Dashboard
+description: Share server status with your community — no login required.
+icon: Globe
+---
+
+The Public Dashboard lets you share a read-only view of your game server's status with anyone, without requiring them to log in to COSY.
+
+## What Is It?
+
+A Public Dashboard is a publicly accessible page that displays information about your game server. You decide what's shown — it can include metrics, logs, and freetext blocks.
+
+## Why Use It?
+
+The most common use case is for **gaming communities**. If you run a Minecraft SMP (Survival Multiplayer), for example, you can share a Public Dashboard with your community so they can:
+
+- **Check if the server is online** before launching their game
+- **See player counts** and other live metrics
+- **Read server information** like the IP address, recommended mods, or rules — using the freetext feature
+
+You share a single link and anyone with it can see the dashboard — no account needed.
+
+## Setting Up a Public Dashboard
+
+1. Open your server's **Settings** view
+2. Navigate to the **Public Dashboard** section
+3. Enable the Public Dashboard
+4. Configure which elements to display:
+   - **Metrics** — CPU, memory, player count, or custom metrics
+   - **Logs** — Live or recent log output
+   - **Freetext** — Custom text blocks (e.g., connection info, rules, mod lists)
+5. Save the configuration
+
+## Example Setup: Minecraft SMP
+
+A typical Public Dashboard for a Minecraft SMP might include:
+
+| Element | Content |
+|---|---|
+| **Freetext** | Server IP: `play.example.com`, Minecraft version: 1.20.4, Recommended mods: list |
+| **Metric** | Player count (via [custom metrics](/docs/features/custom-metrics)) |
+| **Metric** | Server uptime / TPS |
+
+## Accessing a Public Dashboard
+
+When a server has a Public Dashboard enabled, it becomes visible in two ways:
+
+- **Direct link** — The dashboard is accessible at `http(s)://<cosy-url>/server/<server-uuid>`. Share this URL with your community — in Discord, on your website, or wherever your players hang out.
+- **Server Yard** — The game server also appears on the COSY Server Yard for visitors who aren't logged in, allowing them to click through to the public dashboard.
+
+> **Privacy notice:** The Public Dashboard is accessible without authentication. Make sure you are not exposing any personal data or information that could violate privacy regulations (e.g., GDPR/DSGVO). Only display data that is intended to be public.
+
+## Required Permissions
+
+Managing the Public Dashboard through [Access Groups](/docs/features/access-management) requires:
+
+| Permission | Access |
+|---|---|
+| `CHANGE_PUBLIC_DASHBOARD_SETTINGS` | Edit the public dashboard configuration |

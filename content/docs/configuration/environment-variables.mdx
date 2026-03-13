@@ -1,0 +1,41 @@
+---
+title: Environment Variables
+description: Configure your game server and understand auto-generated variables.
+icon: Variable
+---
+
+Environment variables are key-value pairs passed into the Docker container at startup. They are the primary way to configure game server images.
+
+## User-Defined Variables
+
+You can add, edit, and remove environment variables in the **Settings** view of any server. Common examples:
+
+| Variable | Example Value | Purpose |
+|---|---|---|
+| `EULA` | `TRUE` | Accept Minecraft EULA |
+| `TYPE` | `FABRIC` | Minecraft server type |
+| `VERSION` | `1.20.4` | Game version |
+| `DIFFICULTY` | `hard` | Game difficulty |
+| `MAX_PLAYERS` | `20` | Player limit |
+| `SERVER_NAME` | `My Server` | Display name |
+
+The specific variables available depend on the Docker image you're using. Check the image's documentation on Docker Hub for a full list.
+
+## COSY Auto-Generated Variables
+
+In addition to your custom variables, COSY automatically injects the following into every container:
+
+| Variable | Description |
+|---|---|
+| `COSY_GAME_SERVER_UUID` | The server's unique database identifier |
+| `COSY_GAME_SERVER_NAME` | The display name you set in COSY |
+| `COSY_GAME_SERVER_OWNER` | Username of the server owner |
+| `COSY_CONTAINER_SECRET` | A 32-character secret for authenticating [custom metrics](/docs/features/custom-metrics) requests |
+| `COSY_BASE_URL` | The base URL of the COSY backend API |
+| `COSY_METRICS_PERIOD_SECONDS` | How often COSY polls container metrics |
+
+These are set automatically and cannot be overridden. The `COSY_CONTAINER_SECRET` is regenerated on every server start for security — game server plugins or scripts can use it to send custom metrics back to COSY.
+
+## Variable Precedence
+
+If you define a variable with the same name as a COSY auto-generated variable, the auto-generated value takes priority. Avoid using the `COSY_` prefix for your own variables.

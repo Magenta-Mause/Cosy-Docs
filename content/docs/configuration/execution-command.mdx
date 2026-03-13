@@ -1,0 +1,37 @@
+---
+title: Execution Command
+description: Override the container's default startup command.
+icon: Terminal
+---
+
+The execution command lets you override the default `CMD` of the Docker image. Most of the time, you don't need to change this — the image's default command is designed to start the game server correctly.
+
+## When to Use It
+
+You might override the execution command if you need to:
+
+- Run a custom startup script
+- Pass specific flags to the game server binary
+- Chain multiple commands at startup
+
+## How It Works
+
+The execution command is passed as the Docker container's `CMD` when the container is created. If left empty, the image's default `CMD` is used.
+
+### Example
+
+For a vanilla Minecraft server image, the default command might be:
+
+```
+java -Xmx1024M -jar server.jar nogui
+```
+
+You could override it to increase memory:
+
+```
+java -Xmx4096M -jar server.jar nogui
+```
+
+## Configuration
+
+Edit the execution command in the **Settings** view of your server. The command is stored as a list of arguments — COSY passes them directly to Docker without shell interpretation.

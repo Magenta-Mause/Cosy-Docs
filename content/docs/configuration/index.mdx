@@ -1,0 +1,20 @@
+---
+title: Configuration
+description: All configurable settings for your game servers.
+icon: Settings
+---
+
+Every game server in COSY has a set of configurable properties that control how the underlying Docker container is created and run. You can edit these in the **Settings** view of any server.
+
+<Cards>
+  <Card title="Image & Ports" href="/docs/configuration/image-and-ports" description="Docker image name, tag, and port mappings." />
+  <Card title="Environment Variables" href="/docs/configuration/environment-variables" description="Configure the container and understand auto-generated variables." />
+  <Card title="Execution Command" href="/docs/configuration/execution-command" description="Override the container's default startup command." />
+  <Card title="Volumes" href="/docs/configuration/volumes" description="Persistent storage and the volume mount concept." />
+  <Card title="Resource Limits" href="/docs/configuration/resource-limits" description="CPU and memory constraints for game servers." />
+  <Card title="RCON" href="/docs/configuration/rcon" description="Remote console settings for supported games." />
+</Cards>
+
+## When Can I Change Settings?
+
+Docker-related settings (image, ports, environment variables, volumes, resource limits, execution command) are **locked while the server is running**. You need to **stop** the server before you can edit these settings. Once stopped, you can save your changes and they will be applied on the next start of your game server.

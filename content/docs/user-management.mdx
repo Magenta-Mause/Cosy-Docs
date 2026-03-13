@@ -1,0 +1,57 @@
+---
+title: User Management
+description: Invite users, assign roles, and manage resource limits.
+icon: Users
+---
+
+COSY uses an **invitation-based** system — there is no open registration. Users can only join when an Admin or Owner creates an invite for them.
+
+## User Roles
+
+There are three roles with different privilege levels:
+
+| Role      | Description                                                                                                                                                                                     |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Owner** | Full system access. Can manage all users (including Admins), assign roles, delete users, and access every server. There is one Owner per COSY instance (created during installation). |
+| **Admin** | Can manage all servers and Users. Cannot manage other Admins or the Owner. Resource quotas are enforced if configured.                                                                          |
+| **User**  | Standard user with resource limits. Can only access their own servers and servers shared with them via [Access Groups](/docs/features/access-management).                                       |
+
+### Role Comparison
+
+| Capability         | Owner                  | Admin           | User     |
+| ------------------ | ---------------------- | --------------- | -------- |
+| Manage own servers | Yes                    | Yes             | Yes      |
+| Manage all servers | Yes                    | Yes             | No       |
+| Manage users       | Yes                    | Users only      | No       |
+| Assign roles       | Yes                    | No              | No       |
+| Delete users       | Yes (not self)         | Users only      | Self only |
+| Resource quotas    | No limitations enfored | Enforced if set | Enforced if set |
+
+## Inviting Users
+
+1. Navigate to the **User Management** page
+2. Click **Create Invite**
+3. Optionally pre-set a username, role, and resource limits
+4. A one-time invite link/key is generated
+5. Share the key with the person you want to invite
+6. They visit COSY, enter the invite key, set their password, and their account is created
+
+Invites are **single-use** — once redeemed, the key is invalidated. The Owner can revoke pending invites that haven't been used yet.
+
+## Resource Limits
+
+Users can have a maximum amount of **memory** and **CPU** they can allocate across all their servers. When starting a server, COSY checks that the total resource usage stays within the user's quota. This applies to all roles — if resource limits are configured on a user, they are enforced regardless of whether the user is an Owner, Admin, or User.
+
+Admins and the Owner can adjust a user's resource limits at any time from the User Management page.
+
+See [Resource Limits](/docs/configuration/resource-limits) for details on how per-server and per-user limits interact.
+
+## Deleting Users
+
+When a user is deleted:
+
+- Their account is permanently removed
+- Their game servers are also deleted along with all associated data
+- Any Access Group memberships are revoked
+
+The Owner can delete any user except themselves. Admins can delete Users but not other Admins or the Owner. Any user can also delete their own account.

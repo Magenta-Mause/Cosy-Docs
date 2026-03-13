@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "fumadocs-ui/css/style.css";
+@import "fumadocs-ui/css/layouts/docs.css";
+@import "fumadocs-ui/css/neutral.css";
 
 @theme inline {
   --text-xs: 18px;
@@ -87,7 +90,7 @@
   --color-icon-foreground: var(--icon-foreground);
 
   /* RADIUS: Stardew is pixel art, so we want small, blocky corners.
-         4px is basically "2 game pixels" */
+           4px is basically "2 game pixels" */
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: calc(var(--radius) * 0.75);
   --radius-lg: var(--radius);
@@ -215,6 +218,118 @@
   --link: oklch(0.4317 0.2069 291.76);
 }
 
+/* Reset text sizes within Fumadocs docs layout so its UI renders correctly */
+#nd-docs-layout {
+  --text-xs: 0.85rem;
+  --text-sm: 1rem;
+  --text-base: 1.125rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.45rem;
+  --text-2xl: 1.7rem;
+  --text-3xl: 2.1rem;
+}
+
+/* Override prose text colors for better contrast on the Cosy tan background */
+#nd-docs-layout .prose {
+  --tw-prose-body: oklch(20% 0.06 30);
+  --tw-prose-headings: #6e2727;
+  --tw-prose-bold: oklch(20% 0.06 30);
+  --tw-prose-links: var(--link);
+}
+
+#nd-docs-layout .prose > p,
+#nd-docs-layout .prose > ul,
+#nd-docs-layout .prose > ol {
+  font-size: 1.85rem;
+}
+
+#toc-title {
+  height: 50px;
+  display: flex;
+  font-family: "Glasstown", sans-serif;
+  font-size: 2rem;
+}
+
+#toc-title > svg {
+  margin-right: 5px;
+}
+
+#nd-sidebar {
+  width: fit-content;
+}
+
+#nd-docs-layout kbd {
+  font-size: 20px;
+}
+
+#nd-docs-layout aside div:first-child > div > a {
+  font-size: 25px;
+}
+
+#nd-docs-layout table {
+  font-size: 35px;
+}
+
+#nd-docs-layout .prose table {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+#nd-docs-layout .prose p {
+  line-height: 1;
+}
+
+#nd-docs-layout,
+.dark #nd-docs-layout {
+  --color-fd-muted-foreground: oklch(35% 0.08 30);
+  --color-fd-foreground: oklch(20% 0.06 30);
+  --color-fd-background: var(--background);
+  --color-fd-card: var(--secondary-background);
+  --color-fd-card-foreground: oklch(20% 0.06 30);
+  --color-fd-muted: var(--accent);
+  --color-fd-border: oklch(55% 0.1 50 / 50%);
+  --color-fd-popover: var(--secondary-background);
+  --color-fd-popover-foreground: oklch(20% 0.06 30);
+  --color-fd-primary: #6e2727;
+  --color-fd-primary-foreground: var(--white);
+  --color-fd-secondary: var(--secondary-background);
+  --color-fd-secondary-foreground: oklch(25% 0.08 30);
+  --color-fd-accent: var(--accent);
+  --color-fd-accent-foreground: oklch(25% 0.08 30);
+}
+
+/* Force light shiki syntax highlighting regardless of dark mode */
+#nd-docs-layout .shiki code span {
+  color: var(--shiki-light) !important;
+}
+
+/* Give the sidebar a dark background with light text */
+#nd-sidebar {
+  background: #2c2c2c;
+  color: oklch(90% 0.02 58);
+  --color-fd-primary: oklch(85% 0.1 58);
+  --color-fd-muted-foreground: oklch(70% 0.04 58);
+  --color-fd-foreground: oklch(90% 0.02 58);
+  --color-fd-accent: oklch(35% 0.04 58);
+  --color-fd-accent-foreground: oklch(90% 0.02 58);
+  --color-fd-border: oklch(40% 0.04 58);
+  --color-border: oklch(50% 0.04 58);
+  --color-fd-background: #2c2c2c;
+  --color-fd-secondary: oklch(30% 0.02 58);
+}
+
+#nd-sidebar kbd,
+#nd-sidebar [data-search-full] {
+  color: oklch(90% 0.02 58);
+  border-color: oklch(50% 0.04 58);
+}
+
+#nd-sidebar kbd {
+  line-height: normal;
+  display: inline-flex;
+  align-items: center;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -268,7 +383,7 @@ body {
   font-family: "Glasstown", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 0.5;
+  line-height: 1.5;
 }
 
 h1,
@@ -304,6 +419,10 @@ h5 {
 
 h6 {
   font-size: 10px;
+}
+
+[data-card="true"] > h3 {
+  margin-bottom: 15px;
 }
 
 [data-slot="context-menu-item"] {
@@ -404,4 +523,8 @@ input.no-spinner::-webkit-outer-spin-button,
 input.no-spinner::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.prose blockquote {
+  font-size: 30px;
 }

@@ -1,0 +1,85 @@
+---
+title: Access Management
+description: Give moderators and friends fine-grained access to your servers.
+icon: Shield
+---
+
+Access Management lets you share your game servers with other COSY users while controlling exactly what they can do. This is done through **Access Groups**.
+
+## What Are Access Groups?
+
+An Access Group is a set of users and permissions attached to a specific game server. When you add a user to an Access Group, they gain access to that server with the permissions you define.
+
+## Use Case: Server Moderators
+
+If you run a Minecraft server with friends, you might want some of them to be able to:
+
+- See the server status and start/stop it
+- View logs and send console commands
+- But **not** change server configuration or delete the server
+
+You can create an Access Group with exactly these permissions and add your moderators to it.
+
+## Available Permissions
+
+| Permission | Description |
+|---|---|
+| `ADMIN` | Full access to the server (wildcard — grants all other permissions) |
+| `SEE_SERVER` | See the server in the server yard |
+| `START_STOP_SERVER` | Start, stop, and restart the server |
+| `READ_SERVER_LOGS` | View server logs in the console |
+| `READ_SERVER_METRICS` | View the metrics page |
+| `READ_SERVER_PRIVATE_DASHBOARD` | View the private dashboard |
+| `SEND_COMMANDS` | Send commands via RCON |
+| `READ_SERVER_SERVER_FILES` | Browse and download files |
+| `CHANGE_SERVER_FILES` | Upload, edit, and delete files |
+| `CHANGE_SERVER_CONFIGS` | Edit server configuration (image, ports, env vars, etc.) |
+| `CHANGE_METRICS_SETTINGS` | Configure metric display settings |
+| `CHANGE_PRIVATE_DASHBOARD_SETTINGS` | Edit private dashboard layout |
+| `CHANGE_PUBLIC_DASHBOARD_SETTINGS` | Edit public dashboard configuration |
+| `CHANGE_PERMISSIONS_SETTINGS` | Manage Access Groups for this server |
+| `CHANGE_RCON_SETTINGS` | Edit RCON configuration |
+| `CHANGE_WEBHOOK_SETTINGS` | Manage webhooks |
+| `TRANSFER_SERVER_OWNERSHIP` | Transfer ownership to another user |
+| `DELETE_SERVER` | Permanently delete the server |
+
+## Setting Up Access
+
+1. Open your server's **Settings** view
+2. Navigate to the **Access Groups** section
+3. Create a new Access Group (or edit an existing one)
+4. Select the permissions to grant
+5. Add users to the group
+
+## Common Permission Sets
+
+### Moderator
+
+A typical moderator should be able to monitor and control the server but not change its configuration:
+
+- `SEE_SERVER`
+- `START_STOP_SERVER`
+- `READ_SERVER_LOGS`
+- `READ_SERVER_METRICS`
+- `READ_SERVER_PRIVATE_DASHBOARD`
+- `SEND_COMMANDS`
+
+### Viewer
+
+For users who should only be able to see server status:
+
+- `SEE_SERVER`
+- `READ_SERVER_METRICS`
+- `READ_SERVER_PRIVATE_DASHBOARD`
+
+### Co-Admin
+
+For trusted users who help manage the server:
+
+- `ADMIN` (grants all permissions)
+
+## How It Works
+
+When a user performs an action on a server they don't own, COSY checks whether they belong to an Access Group that grants the required permission. If not, the action is denied.
+
+System-level Admins and the Owner bypass Access Group checks — they have access to all servers regardless.

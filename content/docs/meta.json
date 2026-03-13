@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "index",
+    "installation",
+    "getting-started",
+    "---Concepts---",
+    "templates",
+    "configuration",
+    "---Management---",
+    "user-management",
+    "---Features---",
+    "features"
+  ]
+}

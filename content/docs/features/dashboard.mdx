@@ -1,0 +1,52 @@
+---
+title: Dashboard & Metrics
+description: Monitor your game servers with real-time metrics and customizable dashboards.
+icon: LayoutDashboard
+---
+
+COSY provides two views for monitoring your game servers: the **Dashboard** and the **Metrics** page.
+
+## Dashboard
+
+The Dashboard is a customizable overview of your server. It supports three types of elements:
+
+| Element Type | Description |
+|---|---|
+| **Metric** | A chart showing CPU, memory, network, or custom metrics |
+| **Logs** | A live log viewer embedded in the dashboard |
+| **Freetext** | A custom text block for notes, links, or instructions |
+
+### Customizing the Layout
+
+Dashboard elements can be rearranged using drag-and-drop. You can add, remove, and resize elements to build the view that works best for you.
+
+The dashboard layout is configured **per server** — all users with access see the same dashboard.
+
+## Metrics Page
+
+The Metrics page shows detailed performance charts for your server:
+
+- **CPU Usage** — Percentage of allocated CPU being used
+- **Memory Usage** — Current memory consumption vs. the configured limit
+- **Network I/O** — Bytes sent and received
+- **Block I/O** — Disk read and write activity
+- **Custom Metrics** — Any [custom metrics](/docs/features/custom-metrics) your server reports
+
+### Time Range
+
+You can adjust the time range to view metrics over different periods — from the last few minutes to hours or days. Metrics are stored in InfluxDB and retained for historical analysis.
+
+### Live Updates
+
+When viewing a running server, metrics update in real time via WebSocket. You can toggle live updates on or off.
+
+## Required Permissions
+
+To view a server's dashboard and metrics via [Access Groups](/docs/features/access-management), a user needs:
+
+| Permission | Access |
+|---|---|
+| `READ_SERVER_METRICS` | View the metrics page |
+| `READ_SERVER_PRIVATE_DASHBOARD` | View the private dashboard |
+| `CHANGE_PRIVATE_DASHBOARD_SETTINGS` | Edit dashboard layout |
+| `CHANGE_METRICS_SETTINGS` | Configure metric display settings |

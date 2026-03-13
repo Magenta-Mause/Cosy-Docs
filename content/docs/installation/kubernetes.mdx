@@ -1,0 +1,138 @@
+---
+title: Kubernetes Installation
+description: Deploy COSY to an existing Kubernetes cluster — interactive walkthrough.
+icon: Network
+---
+
+## Prerequisites
+
+- An existing Kubernetes cluster
+- `kubectl` installed and configured with cluster access
+- An Ingress controller (e.g., nginx-ingress, Traefik)
+- `openssl` or `htpasswd` (from `apache2-utils`) — used to generate credentials during installation
+- Root or sudo access on the machine running the installer
+
+## Step 1: Run the Installer
+
+Run the [install command](/docs/installation) with the `kubernetes` argument appended:
+
+```bash
+sudo bash -c "$(curl -fsSL ...)" _ kubernetes
+```
+
+## Step 2: Admin Username
+
+```
+Admin username [default: admin]:
+```
+
+Press **Enter** to use `admin`, or type a custom name for the initial owner account.
+
+## Step 3: Domain
+
+```
+Domain [default: your-hostname]:
+```
+
+The domain that will be used for Kubernetes Ingress rules and CORS configuration. This should be the domain you plan to point at your cluster (e.g., `cosy.example.com`). If you don't have a domain, you can also use the server's IP address directly. For local testing, set this to `localhost`.
+
+## Step 4: Footer Information (Optional)
+
+```
+Footer full name [default: empty]:
+Footer email [default: empty]:
+Footer phone [default: empty]:
+Footer street [default: empty]:
+Footer city & zip code [default: empty]:
+```
+
+Optional contact info for the COSY UI footer. Press **Enter** to skip each one. The Owner can change these values later through the COSY UI.
+
+> **Note:** Depending on your jurisdiction, you may be required to provide legal contact information (e.g., an imprint) for publicly accessible services. Check your local regulations and fill in the relevant fields if needed.
+
+## What Happens Next
+
+After the prompts, the script:
+
+1. **Checks prerequisites** — Verifies `kubectl` and cluster connectivity
+2. **Creates the `cosy` namespace**
+3. **Creates Kubernetes secrets** — PostgreSQL, InfluxDB, Loki, and admin credentials
+4. **Downloads all manifests** to a temporary directory
+5. **Applies manifests** with placeholder substitution for your domain, image tags, and InfluxDB config:
+   - PostgreSQL (StatefulSet + PVC + Service)
+   - Loki (Deployment + PVC + ConfigMap + Service)
+   - Loki nginx auth proxy (Deployment + ConfigMap + Service)
+   - InfluxDB (Deployment + 2 PVCs + Service)
+   - Backend (Deployment + NodePort Service)
+   - Frontend (Deployment + Service)
+   - Ingress rules (frontend on `/`, backend on `/api`)
+6. **Waits for all pods to become ready**
+7. **Cleans up** the temporary manifest directory
+
+## Step 5: Save Your Credentials
+
+```
+╔═══════════════════════════════════════════════════════════╗
+║          COSY installation completed successfully!        ║
+╚═══════════════════════════════════════════════════════════╝
+
+  Deployment method:  kubernetes
+  Namespace:          cosy
+
+  ── Login Credentials ──────────────────────────────────
+  Username:           admin
+  Password:           <randomly-generated-password>
+
+  ── Access URL ────────────────────────────────────────
+  COSY:               http://cosy.example.com
+
+  ⚠  Please save the password above - it will not be shown again.
+```
+
+**Save the password.** The password is only shown once in the terminal output. The admin credentials are stored in the `cosy-app-secrets` Kubernetes secret in the `cosy` namespace.
+
+## Resources Created
+
+### Deployments & StatefulSets
+
+| Resource          | Type        | Purpose             |
+| ----------------- | ----------- | ------------------- |
+| `cosy-backend`    | Deployment  | Application server  |
+| `cosy-frontend`   | Deployment  | Web interface       |
+| `cosy-influxdb`   | Deployment  | Time-series metrics |
+| `cosy-loki`       | Deployment  | Log aggregation     |
+| `cosy-loki-nginx` | Deployment  | Loki auth proxy     |
+| `cosy-postgres`   | StatefulSet | PostgreSQL database |
+
+### Ingress Rules
+
+| Path   | Service            |
+| ------ | ------------------ |
+| `/`    | `cosy-frontend:80` |
+| `/api` | `cosy-backend:80`  |
+
+Make sure DNS for your domain points to the cluster's Ingress controller.
+
+### Persistent Volume Claims
+
+- `cosy-postgres-pvc` — PostgreSQL data
+- `cosy-loki-data` — Loki log storage
+- `influxdb-data` — InfluxDB metrics data
+- `influxdb-config` — InfluxDB configuration
+
+## Useful Commands
+
+```bash
+# Check pod status
+kubectl get pods -n cosy
+
+# View backend logs
+kubectl logs -n cosy deployment/cosy-backend
+
+# Restart the backend
+kubectl rollout restart -n cosy deployment/cosy-backend
+
+# View all resources
+kubectl get all -n cosy
+```
+

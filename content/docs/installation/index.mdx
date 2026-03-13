@@ -1,0 +1,62 @@
+---
+title: Installation
+description: How to install COSY on your server.
+icon: Download
+---
+
+COSY can be deployed using **Docker Compose** or **Kubernetes**. Both methods use the same interactive install script — just run it and follow the prompts.
+
+> **Note:** COSY currently only supports **HTTP**. Built-in HTTPS support is planned for a future release.
+
+### Want HTTPS now?
+
+You can set up a reverse proxy to handle TLS termination in front of COSY:
+
+1. **Configure COSY** to listen on `localhost:81` (or any local port).
+2. **Set up an [nginx](https://nginx.org/) reverse proxy** that terminates TLS and forwards traffic to `localhost:81`.
+3. **Get a free domain** using [DuckDNS](https://duckdns.vercel.app/) — it provides free subdomains that you can point to your server.
+4. **Obtain an SSL certificate** using [Certbot](https://certbot.eff.org/) — it automates issuing and renewing free Let's Encrypt certificates. See the [Certbot instructions](https://certbot.eff.org/instructions) to get started with your specific server and OS.
+
+## Quick Start
+
+Download and run the install script:
+
+```bash
+sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/Magenta-Mause/Cosy/v1.0.0/install_cosy.sh)" _
+```
+
+The script walks you through the setup interactively — it asks for the deployment method, admin username, domain, port, and optional footer information. Every prompt has a sensible default, so you can press **Enter** through the whole thing for a quick setup.
+
+## Docker vs Kubernetes
+
+|                | Docker Compose                          | Kubernetes                                                                          |
+| -------------- | --------------------------------------- | ----------------------------------------------------------------------------------- |
+| **Best for**   | Single server, simple setups            | Users who already have a cluster and already host multiple services on their server |
+| **Complexity** | Low — single command, systemd autostart | Medium — requires existing cluster and Ingress controller                           |
+| **Scaling**    | Single instance                         | Single instance (game servers run on the backend pod's host)                        |
+| **Management** | `systemctl start/stop cosy`             | `kubectl` / ArgoCD                                                                  |
+| **Storage**    | Game server volumes on disk             | Game server volumes on disk (on the backend pod's host)                             |
+
+Choose **Docker** if you have a dedicated server and want the simplest path to running COSY. Choose **Kubernetes** if you already run a cluster and want COSY deployed alongside your other workloads.
+
+<Cards>
+  <Card
+    title="Docker Installation"
+    href="/docs/installation/docker"
+    description="Step-by-step walkthrough of the Docker setup."
+  />
+  <Card
+    title="Kubernetes Installation"
+    href="/docs/installation/kubernetes"
+    description="Step-by-step walkthrough of the Kubernetes setup."
+  />
+  <Card
+    title="Uninstallation"
+    href="/docs/installation/uninstallation"
+    description="How to completely remove COSY."
+  />
+</Cards>
+
+## Security Notice
+
+COSY requires access to the Docker socket (`/var/run/docker.sock`) to manage game server containers. This grants root-equivalent privileges on the host. Only deploy COSY in trusted environments and restrict network access accordingly.

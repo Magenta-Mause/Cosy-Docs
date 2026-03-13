@@ -1,0 +1,64 @@
+---
+title: Your First Game Server
+description: Step-by-step guide to launching your first game server in COSY.
+icon: Rocket
+---
+
+This guide walks you through creating and starting your first game server after installing COSY.
+
+## Step 1: Log In
+
+Open your COSY instance in the browser and log in with the admin credentials that were displayed during installation.
+
+## Step 2: Create a New Server
+
+From the main server yard view, click the **construction site** tile (or the create button) to start the server creation wizard.
+
+### Set a Name
+
+Give your server a recognizable name. This is displayed in the server yard and used to identify the server throughout the UI.
+
+### Choose a Template
+
+COSY provides pre-configured templates for popular games like Minecraft, ARK: Survival Evolved, Terraria and more. Select a template to auto-fill all configurations.
+
+If your game isn't listed, you can configure a server manually by providing a Docker image. See [Configuration](/docs/configuration) for details.
+
+### Configure Resources
+
+Set the memory and CPU limits for your server. These constrain how much of the host's resources this server can use. See [Resource Limits](/docs/configuration/resource-limits) for more information.
+
+## Step 3: Start the Server
+
+After creating the server, it appears as a house in the server yard. Click on it to open the server detail view, then click the **Start** button.
+
+On the first start, COSY will pull the Docker image (you can track the progress in real time). Once the image is downloaded and the container starts, the server status changes to **Running**.
+
+## Step 4: Monitor Your Server
+
+Once running, you can:
+
+- **Dashboard** — View CPU and memory usage in real time
+- **Console** — See server logs and send commands
+- **Metrics** — Track performance over time with charts
+- **Files** — Browse and edit server files
+
+## Next Steps
+
+<Cards>
+  <Card
+    title="Game Server Abstraction"
+    href="/docs/getting-started/cosy-concept"
+    description="Understand how COSY maps servers to Docker containers."
+  />
+  <Card
+    title="Configuration"
+    href="/docs/configuration"
+    description="Fine-tune image, ports, environment variables, and more."
+  />
+  <Card
+    title="Templates"
+    href="/docs/templates"
+    description="Learn how the template system works."
+  />
+</Cards>

@@ -1,0 +1,4 @@
+{
+  "title": "Features",
+  "pages": ["console", "dashboard", "custom-metrics", "file-management", "public-dashboard", "webhooks", "access-management"]
+}

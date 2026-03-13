@@ -1,0 +1,4 @@
+{
+  "title": "Configuration",
+  "pages": ["image-and-ports", "environment-variables", "execution-command", "volumes", "resource-limits", "rcon"]
+}

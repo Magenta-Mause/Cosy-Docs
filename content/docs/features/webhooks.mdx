@@ -1,0 +1,55 @@
+---
+title: Webhooks
+description: Get notified when server events happen.
+icon: Webhook
+---
+
+Webhooks let you receive notifications when events happen on your game servers. COSY sends HTTP/HTTPS requests to your configured endpoint whenever a subscribed event occurs.
+
+## Supported Platforms
+
+| Platform    | Description                                                   |
+| ----------- | ------------------------------------------------------------- |
+| **Discord** | Sends formatted messages to a Discord channel via webhook URL |
+| **Slack**   | Sends messages to a Slack channel via incoming webhook        |
+| **n8n**     | Triggers an n8n workflow via webhook URL                      |
+
+## Events
+
+You can subscribe to the following server events:
+
+| Event            | Triggered When                                         |
+| ---------------- | ------------------------------------------------------ |
+| `SERVER_STARTED` | The game server container starts successfully          |
+| `SERVER_STOPPED` | The game server is stopped (manually or automatically) |
+| `SERVER_FAILED`  | The game server container crashes or fails to start    |
+
+## Setting Up a Webhook
+
+1. Open your server's **Settings** view
+2. Navigate to the **Webhooks** section
+3. Click **Create Webhook**
+4. Choose the platform
+5. Paste the webhook URL from your platform
+6. Select which events to subscribe to
+7. Save
+
+### Getting a Webhook URL
+
+**Discord:** Go to your server's **Settings** > **Integrations** > **Webhooks**, create a new webhook, and copy the URL. See the [Discord webhook documentation](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) for details.
+
+**Slack:** Create an **Incoming Webhook** in your workspace's app settings, choose a channel, and copy the URL. See the [Slack webhook documentation](https://api.slack.com/messaging/webhooks) for details.
+
+**n8n:** Create a new workflow, add a **Webhook** trigger node, and copy the production webhook URL. See the [n8n webhook documentation](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/) for details.
+
+## Multiple Webhooks
+
+You can create multiple webhooks per server — for example, one Discord webhook for all events and a separate n8n webhook for `SERVER_FAILED` to trigger an automated restart workflow.
+
+## Required Permissions
+
+Managing webhooks through [Access Groups](/docs/features/access-management) requires:
+
+| Permission                | Access                            |
+| ------------------------- | --------------------------------- |
+| `CHANGE_WEBHOOK_SETTINGS` | Create, edit, and delete webhooks |
