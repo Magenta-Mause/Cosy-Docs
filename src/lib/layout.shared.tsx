@@ -1,4 +1,5 @@
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
+import { DISCORD_INVITE_URL } from "./constants";
 
 export function baseOptions(): BaseLayoutProps {
   return {
@@ -8,7 +9,7 @@ export function baseOptions(): BaseLayoutProps {
     links: [
       {
         text: "Discord",
-        url: "https://discord.gg/t2zFuPT6",
+        url: DISCORD_INVITE_URL,
         external: true,
       },
     ],

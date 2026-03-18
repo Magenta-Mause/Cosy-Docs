@@ -6,6 +6,7 @@ import cosyLogo from "@/assets/props/cosy-logo.gif";
 import { LandingFooter } from "@/components/landing-footer";
 import { LandingHeader } from "@/components/landing-header";
 import { Button } from "@/components/ui/button";
+import { DISCORD_INVITE_URL } from "@/lib/constants";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -60,7 +61,7 @@ export function HomePage() {
             <a href="/docs">Documentation</a>
           </Button>
           <Button asChild size="lg" className="border-3" variant="secondary">
-            <a href="https://discord.gg/t2zFuPT6" target="_blank" rel="noopener noreferrer">
+            <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">
               Discord
             </a>
           </Button>

@@ -1,7 +1,9 @@
+import { DISCORD_INVITE_URL } from "@/lib/constants";
+
 export function DiscordHelp() {
   return (
     <a
-      href="https://discord.gg/t2zFuPT6"
+      href={DISCORD_INVITE_URL}
       target="_blank"
       rel="noopener noreferrer"
       className="group flex flex-col gap-2 rounded-lg border-3 border-fd-border bg-fd-secondary p-4 transition-colors hover:bg-fd-accent"
