@@ -6,20 +6,17 @@ import cosyLogo from "@/assets/props/cosy-logo.gif";
 import { LandingFooter } from "@/components/landing-footer";
 import { LandingHeader } from "@/components/landing-header";
 import { Button } from "@/components/ui/button";
-import { DISCORD_INVITE_URL } from "@/lib/constants";
+import { DISCORD_INVITE_URL, INSTALL_COMMAND } from "@/lib/constants";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const CURL_COMMAND =
-  'sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/Magenta-Mause/Cosy/v1.0.0/install_cosy.sh)" _';
-
 export function HomePage() {
   const [copied, setCopied] = useState(false);
 
   async function copyToClipboard() {
-    await navigator.clipboard.writeText(CURL_COMMAND);
+    await navigator.clipboard.writeText(INSTALL_COMMAND);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -44,7 +41,7 @@ export function HomePage() {
         <div className="mt-8 w-full max-w-xl">
           <div className="flex items-center rounded-md border-border border-3 bg-card px-1 py-1 gap-2">
             <div className="flex-1 min-w-0 overflow-x-auto scroller">
-              <code className="block whitespace-nowrap text-sm px-2">$ {CURL_COMMAND}</code>
+              <code className="block whitespace-nowrap text-sm px-2">$ {INSTALL_COMMAND}</code>
             </div>
             <Button variant="ghost" onClick={copyToClipboard} className="border-3 shrink-0">
               {copied ? (

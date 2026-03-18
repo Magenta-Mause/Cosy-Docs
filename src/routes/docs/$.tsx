@@ -8,6 +8,11 @@ import { DocsBody, DocsDescription, DocsPage, DocsTitle } from "fumadocs-ui/layo
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { useMemo } from "react";
 import { DiscordHelp } from "@/components/discord-help";
+import {
+  InstallCommand,
+  UninstallDockerCommand,
+  UninstallKubernetesCommand,
+} from "@/components/install-commands";
 import { TemplateList } from "@/components/template-list";
 import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
@@ -47,6 +52,9 @@ const clientLoader = browserCollections.docs.createClientLoader({
           <MDX
             components={{
               ...defaultMdxComponents,
+              InstallCommand,
+              UninstallDockerCommand,
+              UninstallKubernetesCommand,
               TemplateList,
             }}
           />
