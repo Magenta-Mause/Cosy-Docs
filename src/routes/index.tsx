@@ -3,6 +3,7 @@ import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import backgroundImg from "@/assets/background.png";
 import cosyLogo from "@/assets/props/cosy-logo.gif";
+import { DiscordIcon } from "@/components/discord-icon";
 import { LandingFooter } from "@/components/landing-footer";
 import { LandingHeader } from "@/components/landing-header";
 import { Button } from "@/components/ui/button";
@@ -58,8 +59,14 @@ export function HomePage() {
             <a href="/docs">Documentation</a>
           </Button>
           <Button asChild size="lg" className="border-3" variant="secondary">
-            <a href={DISCORD_INVITE_URL} target="_blank" rel="noopener noreferrer">
-              Discord
+            <a
+              href={DISCORD_INVITE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="gap-3 flex"
+            >
+              <DiscordIcon className="h-6! w-6! top-[1px] relative" />
+              Join our Community
             </a>
           </Button>
         </div>
