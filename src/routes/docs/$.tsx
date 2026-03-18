@@ -7,6 +7,7 @@ import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { DocsBody, DocsDescription, DocsPage, DocsTitle } from "fumadocs-ui/layouts/docs/page";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { useMemo } from "react";
+import { DiscordHelp } from "@/components/discord-help";
 import { TemplateList } from "@/components/template-list";
 import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
@@ -61,7 +62,12 @@ function Page() {
   const tree = useMemo(() => transformPageTree(data.tree as PageTree.Folder), [data.tree]);
 
   return (
-    <DocsLayout {...baseOptions()} themeSwitch={{ enabled: false }} tree={tree}>
+    <DocsLayout
+      {...baseOptions()}
+      themeSwitch={{ enabled: false }}
+      tree={tree}
+      sidebar={{ footer: <DiscordHelp /> }}
+    >
       <Content />
     </DocsLayout>
   );

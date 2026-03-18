@@ -5,5 +5,12 @@ export function baseOptions(): BaseLayoutProps {
     nav: {
       title: "COSY Docs",
     },
+    links: [
+      {
+        text: "Discord",
+        url: "https://discord.gg/t2zFuPT6",
+        external: true,
+      },
+    ],
   };
 }
