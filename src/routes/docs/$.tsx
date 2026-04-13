@@ -9,7 +9,9 @@ import defaultMdxComponents from "fumadocs-ui/mdx";
 import { useMemo } from "react";
 import { DiscordHelp } from "@/components/discord-help";
 import {
+  DockerInstallCommand,
   InstallCommand,
+  KubernetesInstallCommand,
   UninstallDockerCommand,
   UninstallKubernetesCommand,
 } from "@/components/install-commands";
@@ -53,6 +55,8 @@ const clientLoader = browserCollections.docs.createClientLoader({
             components={{
               ...defaultMdxComponents,
               InstallCommand,
+              DockerInstallCommand,
+              KubernetesInstallCommand,
               UninstallDockerCommand,
               UninstallKubernetesCommand,
               TemplateList,
