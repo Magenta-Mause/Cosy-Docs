@@ -1,4 +1,4 @@
-export const DISCORD_INVITE_URL = "https://discord.gg/t2zFuPT6";
+export const DISCORD_INVITE_URL = "https://discord.gg/Ns2Z6DavfA";
 export const GITHUB_REPO_URL = "https://github.com/Magenta-Mause/Cosy";
 
 export const COSY_VERSION = "v1.0.1";
