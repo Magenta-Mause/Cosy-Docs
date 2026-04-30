@@ -7,6 +7,16 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   rules:
+    - host: cosy-hosting.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: cosy-landing-page
+                port:
+                  number: 80
     - host: cosy-docs.jannekeipert.de
       http:
         paths:
@@ -20,4 +30,5 @@ spec:
   tls:
     - hosts:
         - cosy-docs.jannekeipert.de
+        - cosy-hosting.net
       secretName: multi-domain-cert
