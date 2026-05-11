@@ -32,3 +32,34 @@ spec:
         - cosy-docs.jannekeipert.de
         - cosy-hosting.net
       secretName: multi-domain-cert
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cosy-landing-page-assets
+  namespace: cosy
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.middlewares: cosy-cache-assets@kubernetescrd
+spec:
+  rules:
+    - host: cosy-hosting.net
+      http:
+        paths:
+          - path: /assets
+            pathType: Prefix
+            backend:
+              service:
+                name: cosy-landing-page
+                port:
+                  number: 80
+    - host: cosy-docs.jannekeipert.de
+      http:
+        paths:
+          - path: /assets
+            pathType: Prefix
+            backend:
+              service:
+                name: cosy-landing-page
+                port:
+                  number: 80
