@@ -1,3 +1,4 @@
+import "@/styles/docs.css";
 import browserCollections from "fumadocs-mdx:collections/browser";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
