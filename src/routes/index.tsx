@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
-import backgroundImg from "@/assets/background.png";
+import backgroundImg from "@/assets/background.webp";
 import cosyLogo from "@/assets/props/cosy-logo.gif";
 import { DiscordIcon } from "@/components/discord-icon";
 import { LandingFooter } from "@/components/landing-footer";
@@ -59,7 +59,7 @@ export function HomePage() {
       <LandingHeader />
 
       <main className="flex-1 flex flex-col items-center text-center px-4 py-24">
-        <img src={cosyLogo} alt="Cosy logo" className="w-[32vw]" />
+        <img src={cosyLogo} alt="Cosy logo" className="w-[32vw]" fetchPriority="high" />
         <p className="mt-6 max-w-xl text-lg text-muted-foreground">
           Easily host your game servers on your own infrastructure.
         </p>

@@ -357,6 +357,7 @@
   src: url("../assets/font-family/glasstown_nbp.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -364,6 +365,7 @@
   src: url("../assets/font-family/FippsRegular-enqx.otf");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 html,
