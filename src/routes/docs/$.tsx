@@ -20,6 +20,22 @@ import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
 
 export const Route = createFileRoute("/docs/$")({
+  head: ({ loaderData }) => ({
+    meta: [
+      {
+        title: loaderData?.title ? `${loaderData.title} | COSY Docs` : "COSY Docs",
+      },
+      ...(loaderData?.description
+        ? [
+            { name: "description", content: loaderData.description },
+            { property: "og:description", content: loaderData.description },
+          ]
+        : []),
+      ...(loaderData?.title
+        ? [{ property: "og:title", content: `${loaderData.title} | COSY Docs` }]
+        : []),
+    ],
+  }),
   component: Page,
   loader: async ({ params }) => {
     const slugs = params._splat?.split("/") ?? [];
@@ -41,6 +57,8 @@ const loader = createServerFn({
     return {
       tree: source.pageTree as object,
       path: page.path,
+      title: page.data.title as string,
+      description: (page.data.description ?? "") as string,
     };
   });
 

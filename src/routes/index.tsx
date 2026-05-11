@@ -10,6 +10,31 @@ import { Button } from "@/components/ui/button";
 import { DISCORD_INVITE_URL, INSTALL_COMMAND } from "@/lib/constants";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      {
+        title: "COSY - Self-Hosted Game Server Management",
+      },
+      {
+        name: "description",
+        content:
+          "COSY (Cost Optimized Server Yard) is an open-source platform for self-hosting game servers on your own infrastructure. Install via Docker or Kubernetes in seconds.",
+      },
+      {
+        property: "og:title",
+        content: "COSY - Self-Hosted Game Server Management",
+      },
+      {
+        property: "og:description",
+        content:
+          "COSY (Cost Optimized Server Yard) is an open-source platform for self-hosting game servers on your own infrastructure. Install via Docker or Kubernetes in seconds.",
+      },
+      {
+        property: "og:url",
+        content: "https://cosy-hosting.net/",
+      },
+    ],
+  }),
   component: HomePage,
 });
 
