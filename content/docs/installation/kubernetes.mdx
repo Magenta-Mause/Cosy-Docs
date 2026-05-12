@@ -11,6 +11,7 @@ icon: Network
 - An Ingress controller (e.g., nginx-ingress, Traefik)
 - `openssl` or `htpasswd` (from `apache2-utils`) — used to generate credentials during installation
 - Root or sudo access on the machine running the installer
+- [cert-manager](https://cert-manager.io/) — required for TLS/HTTPS (the installer can install it for you)
 
 ## Step 1: Run the Installer
 
@@ -26,7 +27,23 @@ Admin username [default: admin]:
 
 Press **Enter** to use `admin`, or type a custom name for the initial owner account.
 
-## Step 3: Domain
+## Step 3: TLS / HTTPS
+
+```
+Enable TLS/HTTPS via Let's Encrypt? [y/N]:
+```
+
+Choose whether to enable automatic HTTPS. When enabled, the installer sets up [cert-manager](https://cert-manager.io/) with a Let's Encrypt ClusterIssuer to automatically provision and renew TLS certificates for your Ingress.
+
+If cert-manager is not already installed on your cluster, the installer will offer to install it for you.
+
+If you enable TLS, you'll be prompted for the Let's Encrypt email:
+
+```
+Email for Let's Encrypt notifications:
+```
+
+## Step 4: Domain
 
 ```
 Domain [default: your-hostname]:
@@ -34,7 +51,9 @@ Domain [default: your-hostname]:
 
 The domain that will be used for Kubernetes Ingress rules and CORS configuration. This should be the domain you plan to point at your cluster (e.g., `cosy.example.com`). If you don't have a domain, you can also use the server's IP address directly. For local testing, set this to `localhost`.
 
-## Step 4: Footer Information (Optional)
+> **Need a domain?** Get a free subdomain at the [Cosy Domain Provider](https://domain-provider.cosy-hosting.net) — claim a `*.cosy-hosting.net` subdomain and point it to your server's IP address.
+
+## Step 5: Footer Information (Optional)
 
 ```
 Footer full name [default: empty]:
@@ -52,7 +71,7 @@ Optional contact info for the COSY UI footer. Press **Enter** to skip each one. 
 
 After the prompts, the script:
 
-1. **Checks prerequisites** — Verifies `kubectl` and cluster connectivity
+1. **Checks prerequisites** — Verifies `kubectl` and cluster connectivity (and installs cert-manager if TLS is enabled and it's not already present)
 2. **Creates the `cosy` namespace**
 3. **Creates Kubernetes secrets** — PostgreSQL, InfluxDB, Loki, and admin credentials
 4. **Downloads all manifests** to a temporary directory
@@ -63,11 +82,12 @@ After the prompts, the script:
    - InfluxDB (Deployment + 2 PVCs + Service)
    - Backend (Deployment + NodePort Service)
    - Frontend (Deployment + Service)
-   - Ingress rules (frontend on `/`, backend on `/api`)
+   - cert-manager ClusterIssuer (TLS only)
+   - Ingress rules with TLS configuration (frontend on `/`, backend on `/api`)
 6. **Waits for all pods to become ready**
 7. **Cleans up** the temporary manifest directory
 
-## Step 5: Save Your Credentials
+## Step 6: Save Your Credentials
 
 ```
 ╔═══════════════════════════════════════════════════════════╗

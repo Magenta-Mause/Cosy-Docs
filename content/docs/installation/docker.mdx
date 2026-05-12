@@ -38,17 +38,38 @@ Admin username [default: admin]:
 
 This is the username for the initial owner account. Press **Enter** to use `admin`, or type a custom name.
 
-## Step 4: Port
+## Step 4: TLS / HTTPS
+
+```
+Enable TLS/HTTPS via Let's Encrypt? [y/N]:
+```
+
+Choose whether to enable automatic HTTPS. When enabled, COSY uses [Caddy](https://caddyserver.com/) as its reverse proxy, which automatically obtains and renews TLS certificates from Let's Encrypt.
+
+**Requirements for TLS mode:**
+- A domain name pointing to your server (not an IP address)
+- Ports **80** and **443** must be available
+- An email address for Let's Encrypt notifications
+
+If you enable TLS, you'll be prompted for the Let's Encrypt email:
+
+```
+Email for Let's Encrypt notifications:
+```
+
+> **Note:** TLS mode cannot be combined with a custom port. When TLS is enabled, the port prompt is skipped and COSY listens on the standard HTTPS port (443).
+
+## Step 5: Port (non-TLS only)
 
 ```
 Port [default: 80]:
 ```
 
-The port COSY's web interface will listen on. If port 80 is already in use, enter a different port.
+This prompt only appears when TLS is **not** enabled. The port COSY's web interface will listen on. If port 80 is already in use, enter a different port.
 
 The script validates that the port is not already in use.
 
-## Step 5: Domain
+## Step 6: Domain
 
 ```
 Domain [default: your-hostname]:
@@ -56,7 +77,9 @@ Domain [default: your-hostname]:
 
 The domain or IP address users will use to access COSY. This is used for CORS configuration. If you're running COSY on a server with a public domain, enter it here (e.g., `cosy.example.com`). If you don't have a domain, you can also use the server's IP address directly. For local testing, set this to `localhost`.
 
-## Step 6: Footer Information (Optional)
+> **Need a domain?** Get a free subdomain at the [Cosy Domain Provider](https://domain-provider.cosy-hosting.net) — claim a `*.cosy-hosting.net` subdomain and point it to your server's IP address.
+
+## Step 7: Footer Information (Optional)
 
 ```
 Footer full name [default: empty]:
@@ -82,7 +105,7 @@ After you answer the prompts, the script automatically:
 6. **Starts all services** — Runs `docker compose up -d` and waits for health checks to pass
 7. **Installs a systemd service** — COSY starts automatically on boot
 
-## Step 7: Save Your Credentials
+## Step 8: Save Your Credentials
 
 When the installation finishes, you'll see:
 
@@ -108,21 +131,22 @@ When the installation finishes, you'll see:
 
 ## Accessing COSY
 
-Open `http://<your-domain>:<port>` in your browser and log in with the admin credentials from the installer output.
+Open the access URL shown in the installer output in your browser (`https://<your-domain>` for TLS or `http://<your-domain>:<port>` without TLS) and log in with the admin credentials.
 
 ## Services
 
 The Docker Compose stack runs 7 services:
 
-| Service           | Image                                 | Purpose                                                   |
-| ----------------- | ------------------------------------- | --------------------------------------------------------- |
-| `cosy-backend`    | `ghcr.io/magenta-mause/cosy-backend`  | Spring Boot application server                            |
-| `cosy-frontend`   | `ghcr.io/magenta-mause/cosy-frontend` | React web interface                                       |
-| `cosy-nginx`      | `nginx:1.25`                          | Reverse proxy (routes `/api` to backend, `/` to frontend) |
-| `cosy-database`   | `postgres:16`                         | PostgreSQL database                                       |
-| `cosy-influx`     | `influxdb:2.7-alpine`                 | Time-series metrics storage                               |
-| `cosy-loki`       | `grafana/loki:2.9.4`                  | Log aggregation                                           |
-| `cosy-loki-nginx` | `nginx:1.25`                          | Authentication proxy for Loki                             |
+| Service           | Image                                 | Purpose                                                                  |
+| ----------------- | ------------------------------------- | ------------------------------------------------------------------------ |
+| `cosy-backend`    | `ghcr.io/magenta-mause/cosy-backend`  | Spring Boot application server                                           |
+| `cosy-frontend`   | `ghcr.io/magenta-mause/cosy-frontend` | React web interface                                                      |
+| `cosy-nginx`      | `nginx:1.25`                          | Reverse proxy — **non-TLS** mode only (routes `/api` to backend, `/` to frontend) |
+| `cosy-caddy`      | `caddy:2`                             | Reverse proxy with automatic TLS — **TLS** mode only                     |
+| `cosy-database`   | `postgres:16`                         | PostgreSQL database                                                      |
+| `cosy-influx`     | `influxdb:2.7-alpine`                 | Time-series metrics storage                                              |
+| `cosy-loki`       | `grafana/loki:2.9.4`                  | Log aggregation                                                          |
+| `cosy-loki-nginx` | `nginx:1.25`                          | Authentication proxy for Loki                                            |
 
 ## Managing COSY
 

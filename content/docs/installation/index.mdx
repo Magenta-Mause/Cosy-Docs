@@ -6,16 +6,16 @@ icon: Download
 
 COSY can be deployed using **Docker Compose** or **Kubernetes**. Both methods use the same interactive install script — just run it and follow the prompts.
 
-> **Note:** COSY currently only supports **HTTP**. Built-in HTTPS support is planned for a future release.
+### HTTPS / TLS Support
 
-### Want HTTPS now?
+COSY has built-in HTTPS support powered by automatic [Let's Encrypt](https://letsencrypt.org/) certificates. During installation, the script will ask whether you want to enable TLS. When enabled:
 
-You can set up a reverse proxy to handle TLS termination in front of COSY:
+- **Docker** — COSY uses [Caddy](https://caddyserver.com/) as its reverse proxy, which automatically obtains and renews TLS certificates. Ports **80** and **443** must be available.
+- **Kubernetes** — COSY uses [cert-manager](https://cert-manager.io/) with a Let's Encrypt ClusterIssuer. The installer can install cert-manager for you if it's not already present.
 
-1. **Configure COSY** to listen on `localhost:81` (or any local port).
-2. **Set up an [nginx](https://nginx.org/) reverse proxy** that terminates TLS and forwards traffic to `localhost:81`.
-3. **Get a free domain** using [DuckDNS](https://duckdns.vercel.app/) — it provides free subdomains that you can point to your server.
-4. **Obtain an SSL certificate** using [Certbot](https://certbot.eff.org/) — it automates issuing and renewing free Let's Encrypt certificates. See the [Certbot instructions](https://certbot.eff.org/instructions) to get started with your specific server and OS.
+You'll need a **domain name** pointing to your server and an **email address** for Let's Encrypt notifications. TLS mode cannot be combined with a custom port — it always uses the standard HTTPS port (443).
+
+> **Need a domain?** Get a free subdomain at the [Cosy Domain Provider](https://domain-provider.cosy-hosting.net) — claim a `*.cosy-hosting.net` subdomain and point it to your server's IP address in seconds.
 
 ## Quick Start
 
