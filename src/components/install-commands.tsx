@@ -1,4 +1,4 @@
-import { CodeBlock } from "fumadocs-ui/components/codeblock";
+import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock";
 import {
   INSTALL_COMMAND,
   INSTALL_DOCKER_COMMAND,
@@ -10,7 +10,9 @@ import {
 function CommandBlock({ command }: { command: string }) {
   return (
     <CodeBlock className="overflow-x-auto pl-4 pr-8 whitespace-nowrap">
-      <code>{command}</code>
+      <Pre>
+        <code>{command}</code>
+      </Pre>
     </CodeBlock>
   );
 }

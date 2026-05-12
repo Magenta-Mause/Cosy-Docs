@@ -18,11 +18,8 @@ import {
 import { TemplateList } from "@/components/template-list";
 import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
-import docsCss from "@/styles/docs.css?url";
-
 export const Route = createFileRoute("/docs/$")({
   head: ({ loaderData }) => ({
-    links: [{ rel: "stylesheet", href: docsCss }],
     meta: [
       {
         title: loaderData?.title ? `${loaderData.title} | COSY Docs` : "COSY Docs",
