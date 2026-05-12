@@ -16,6 +16,7 @@ import {
   UninstallKubernetesCommand,
 } from "@/components/install-commands";
 import { TemplateList } from "@/components/template-list";
+import { YouTubeEmbed } from "@/components/youtube-embed";
 import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
 export const Route = createFileRoute("/docs/$")({
@@ -77,6 +78,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
               UninstallDockerCommand,
               UninstallKubernetesCommand,
               TemplateList,
+              YouTubeEmbed,
             }}
           />
         </DocsBody>

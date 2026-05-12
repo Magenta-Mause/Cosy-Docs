@@ -80,6 +80,19 @@ export function HomePage() {
         </div>
 
         <div className="mt-8 flex gap-4">
+          <Button asChild size="lg" className="border-3" variant="secondary">
+            <a
+              href="https://www.youtube.com/watch?v=viYTg3nZamw"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="gap-3 flex items-center"
+            >
+              <svg viewBox="0 0 24 24" className="h-6! w-6! fill-current" aria-hidden="true">
+                <polygon points="5,3 19,12 5,21" />
+              </svg>
+              Video Tutorial
+            </a>
+          </Button>
           <Button asChild size="lg" className="border-3">
             <a href="/docs">Documentation</a>
           </Button>
