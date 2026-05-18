@@ -20,3 +20,4 @@ src/routeTree.gen.ts
 dist
 
 .idea
+.claude
