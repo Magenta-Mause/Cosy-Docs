@@ -59,7 +59,7 @@ export function HomePage() {
       <LandingHeader />
 
       <main className="flex-1 flex flex-col items-center text-center px-4 py-24">
-        <img src={cosyLogo} alt="Cosy logo" className="w-[32vw]" fetchPriority="high" />
+        <img src={cosyLogo} alt="Cosy logo" className="w-[80vw] md:w-[32vw]" fetchPriority="high" />
         <p className="mt-6 max-w-xl text-lg text-muted-foreground">
           Easily host your game servers on your own infrastructure.
         </p>
@@ -79,7 +79,7 @@ export function HomePage() {
           </div>
         </div>
 
-        <div className="mt-8 flex gap-4">
+        <div className="mt-8 flex gap-4 md:flex-row flex-col">
           <Button asChild size="lg" className="border-3" variant="secondary">
             <a
               href="https://www.youtube.com/watch?v=viYTg3nZamw"
