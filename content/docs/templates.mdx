@@ -135,7 +135,7 @@ resource_limit:
 | `port_mapping`             | Port mappings as `'host_port/protocol': container_port` (values may be `{{var}}` placeholders)   |
 | `file_mounts`              | Persistent volume paths (must start with `/`)                                                    |
 | `host_mounts`              | Direct host bind mounts (`host_path` → `container_path`, optional `read_only`, defaults to read-only). Only administrators can create servers with host mounts — see [Volumes](/docs/configuration/volumes) |
-| `annotations`              | Docker container labels applied at launch. Values may contain `{{var}}` placeholders; keys with the reserved `cosy.` prefix are stripped at runtime |
+| `annotations`              | Docker container labels applied at launch. Values may contain `{{var}}` placeholders; keys with the reserved `cosy.` prefix are stripped at runtime. Used e.g. by the [MC-Router setup](/docs/guides/minecraft-domain) for hostname routing |
 | `tags`                     | Categorization tags used for filtering in the creation wizard (e.g. `fabric`, `modpack`)         |
 | `resource_limit`           | Memory (e.g., `6GiB`) and CPU (e.g., `3`) limits; both may contain `{{var}}` placeholders        |
 | `docker_execution_command` | Custom container startup command                                                                 |
