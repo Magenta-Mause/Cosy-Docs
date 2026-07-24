@@ -4,12 +4,12 @@ description: Walkthrough — host Minecraft servers behind the MC-Router proxy, 
 icon: Globe
 ---
 
-This guide walks you through hosting a Minecraft (Java Edition) server that players reach via a domain like `smp.play.cosy-hosting.net` — no port numbers, and multiple servers can share the standard Minecraft port.
+This guide walks you through hosting a Minecraft (Java Edition) server that players reach via a domain like `misty-castle.play.cosy-hosting.net` — no port numbers, and multiple servers can share the standard Minecraft port.
 
 ## What You'll Build
 
 ```
-Player types smp.play.cosy-hosting.net in Minecraft
+Player types misty-castle.play.cosy-hosting.net in Minecraft
         │
         ▼  DNS (A record from the Cosy Domain Provider)
 Your host, port 25565
@@ -17,8 +17,8 @@ Your host, port 25565
         ▼
 MC-Router proxy (runs as a COSY game server)
         │  routes by the hostname the player typed
-        ├── smp.play.cosy-hosting.net      → Paper server container
-        └── creative.play.cosy-hosting.net → Vanilla server container
+        ├── misty-castle.play.cosy-hosting.net → Paper server container
+        └── swift-harbor.play.cosy-hosting.net → Vanilla server container
 ```
 
 The **MC-Router (Proxy)** template runs [itzg/mc-router](https://github.com/itzg/mc-router) as a regular COSY game server. It is the only server that publishes port `25565` on the host. The Minecraft servers themselves use the **(MC-Router)** template variants, which publish no host port at all — instead they carry a `mc-router.host` container annotation, and the proxy automatically discovers them and forwards each connection to the server whose hostname matches what the player typed.
@@ -37,16 +37,16 @@ The **MC-Router (Proxy)** template runs [itzg/mc-router](https://github.com/itzg
 If you already own a domain, create an A record pointing at your host and skip to Step 2. Otherwise, the **[Cosy Domain Provider](https://domain-provider.cosy-hosting.net)** gives you a free `*.play.cosy-hosting.net` subdomain:
 
 1. Register an account and verify your email address.
-2. Claim a subdomain label — 3–63 characters, lowercase letters, digits, and hyphens (a few labels like `www` or `mail` are reserved). This becomes your full address, e.g. `smp.play.cosy-hosting.net`.
+2. Claim a subdomain — on the **free plan** the label is randomly generated as a two-word name like `misty-castle`, giving you the address `misty-castle.play.cosy-hosting.net`. **Plus** accounts can choose a custom label instead (3–63 characters, lowercase letters, digits, and hyphens; a few labels like `www` or `mail` are reserved).
 3. Set the **Target IP** to your host's public IP address (IPv6 optional).
 
 {/* screenshot: /guides/minecraft/domain-claim.png — the claim form with label and target IP filled in */}
 
-The subdomain starts in **PENDING** status while the DNS record is created and switches to **ACTIVE** once it is live. Records use a 5-minute TTL, so changes propagate quickly. You can verify resolution with `dig +short smp.play.cosy-hosting.net`.
+The subdomain starts in **PENDING** status while the DNS record is created and switches to **ACTIVE** once it is live. Records use a 5-minute TTL, so changes propagate quickly. You can verify resolution with `dig +short misty-castle.play.cosy-hosting.net`.
 
 {/* screenshot: /guides/minecraft/domain-active.png — dashboard showing the subdomain in ACTIVE state */}
 
-> Free accounts can claim **one** subdomain; Plus accounts can claim up to five. Each Minecraft server behind MC-Router needs its own hostname, so plan accordingly (see [Adding More Servers](#adding-more-servers)).
+> Free accounts can claim **one** subdomain with a random name; Plus accounts can claim up to five and pick custom labels. Each Minecraft server behind MC-Router needs its own hostname, so plan accordingly (see [Adding More Servers](#adding-more-servers)).
 
 ## Step 2: Create the MC-Router Proxy
 
@@ -73,7 +73,7 @@ Now create the actual game server:
 
 1. Start the creation wizard again and select **Minecraft**.
 2. Filter by the `mc-router` tag and pick a **(MC-Router)** variant — Paper, Fabric, Forge, NeoForge, Purpur, Vanilla, and modpack variants are available.
-3. Fill in the template variables: game version, memory — and most importantly the **Router Hostname**, which must be exactly the address players will type, e.g. `smp.play.cosy-hosting.net`.
+3. Fill in the template variables: game version, memory — and most importantly the **Router Hostname**, which must be exactly the address players will type, e.g. `misty-castle.play.cosy-hosting.net`.
 4. Create and **start** the server. The first start pulls the image and generates the world, which can take a few minutes.
 
 {/* screenshot: /guides/minecraft/backend-variables.png — wizard step 2 with the Router Hostname variable filled in */}
@@ -87,7 +87,7 @@ Unlike the regular Minecraft templates, the (MC-Router) variants publish **no ho
 In Minecraft Java Edition: **Multiplayer → Add Server**, and enter your subdomain as the server address — no port needed:
 
 ```
-smp.play.cosy-hosting.net
+misty-castle.play.cosy-hosting.net
 ```
 
 {/* screenshot: /guides/minecraft/minecraft-connect.png — Minecraft add-server screen with the subdomain entered */}
@@ -112,7 +112,7 @@ That's it — no proxy configuration, no new ports, no firewall changes. All ser
 | Connection refused / timeout | Proxy server not running, or port 25565/tcp blocked by the host firewall |
 | "No route to server" or wrong server | The address the player typed doesn't exactly match any server's Router Hostname — MC-Router matches the exact string from the handshake |
 | Changed the Router Hostname but the old one still works | Annotations are applied when the container launches — **restart** the Minecraft server after changing its hostname |
-| Another server fails to start on port 25565 | Only the proxy should publish 25565; regular (non-MC-Router) Minecraft servers on the same host must use a different host port |
+| The MC-Router proxy won't start (port 25565 already allocated) | Another server already publishes host port 25565 — typically a Minecraft server created from a regular (non-MC-Router) template. Stop that server and either move it to a different host port or recreate it from a (MC-Router) variant; only the proxy should publish 25565 |
 
 ## How It Works Under the Hood
 
