@@ -18,6 +18,12 @@ Each template specifies:
 - **File mounts** for persistent storage
 - **Resource limits** (CPU and memory)
 - **Execution command** (optional)
+- **Tags** for filtering templates in the creation wizard (e.g. `fabric`, `modpack`)
+- **Host mounts** and **annotations** (optional, advanced — see below)
+
+## Games
+
+Games are defined in the `games/` directory of the same repository — one YAML file per game with its display name and artwork (the file name is the game's slug, e.g. `minecraft.yaml`). Templates reference their game via the `game_id` field. In the server creation wizard, games appear in a sidebar and group the available templates.
 
 ## Available Templates
 
@@ -31,13 +37,15 @@ The collection is community-maintained — new games and variations are added th
 
 Templates are selected during the server creation process. For a detailed walkthrough, see [Your First Game Server](/docs/getting-started/first-game-server).
 
-In short: create a new server, pick a game, select a template, fill in any template variables (e.g., memory allocation, player limits), and create the server. You can modify any template-provided setting after creation through the server's [configuration](/docs/configuration) page.
+In short: create a new server, pick a game from the sidebar, optionally narrow the template list with tag filters, select a template, fill in any template variables (e.g., memory allocation, player limits), and create the server. You can modify any template-provided setting after creation through the server's [configuration](/docs/configuration) page.
 
 ## Template Variables
 
-Templates can define **variables** — user-configurable inputs that get substituted into environment variables using `{{placeholder}}` syntax.
+Templates can define **variables** — user-configurable inputs that get substituted into the template using `{{placeholder}}` syntax.
 
 For example, the Minecraft Fabric template defines a `version` variable. When you fill in `1.21.2`, the environment variable `VERSION` is set to `1.21.2` inside the container.
+
+Placeholders are not limited to environment variables. They can appear in port mappings, resource limits (e.g. `memory: "{{memory}}GiB"`), the execution command, host mount paths, and annotation values — the value you enter is substituted wherever the placeholder is used.
 
 Variable types:
 
@@ -54,6 +62,8 @@ Each variable can also specify:
 - **`default`** — A default value that is pre-filled when creating the server.
 - **`example`** — An example value shown as a hint in the input field.
 - **`options`** — A list of allowed values (required for the `select` type).
+- **`description`** — A human-readable explanation of what the variable controls, shown below the input in the creation wizard.
+- **`required`** — Whether the user must provide a value (no default accepted).
 
 ## Contributing Templates
 
@@ -67,21 +77,26 @@ Templates must be placed at `templates/{game-name}/{template-description}.yaml` 
 # yaml-language-server: $schema=../../schema/template.schema.json
 name: Minecraft Fabric
 description: Minecraft Fabric Server with default fabric installation
-game_id: 38365
+game_id: minecraft
 docker_image_name: itzg/minecraft-server
 docker_image_tag: latest
+
+tags:
+  - fabric
 
 variables:
   - name: Minecraft Version
     type: string
-    regex: \d\.\d+\.\d+
+    regex: \d+\.\d+(\.\d+)?
     placeholder: version
     example: "1.21.2"
+    description: The Minecraft version to run
   - name: Memory Allocation (in Gigabyte)
     type: string
     placeholder: memory
     example: "4"
     default: "6"
+    description: Amount of RAM in gigabytes allocated to the server JVM
 
 environment_variables:
   VERSION: "{{version}}"
@@ -97,29 +112,32 @@ file_mounts:
   - /data
 
 resource_limit:
-  memory: 6GiB
+  memory: "{{memory}}GiB"
   cpu: 3
 ```
 
 ### Required Fields
 
-| Field               | Description                                                             |
-| ------------------- | ----------------------------------------------------------------------- |
-| `name`              | Human-readable template name                                            |
-| `description`       | Brief description (max 500 characters)                                  |
-| `game_id`           | Game ID from the [COSY Game API](https://cosy-game-api.jannekeipert.de) |
-| `docker_image_name` | Docker image (e.g., `itzg/minecraft-server`)                            |
-| `docker_image_tag`  | Image tag (e.g., `latest`)                                              |
+| Field               | Description                                                                                        |
+| ------------------- | -------------------------------------------------------------------------------------------------- |
+| `name`              | Human-readable template name                                                                       |
+| `description`       | Brief description (max 500 characters)                                                             |
+| `game_id`           | Game slug matching a file in `games/` (e.g. `minecraft`); legacy numeric IDs are still accepted    |
+| `docker_image_name` | Docker image (e.g., `itzg/minecraft-server`)                                                       |
+| `docker_image_tag`  | Image tag (e.g., `latest`)                                                                         |
 
 ### Optional Fields
 
-| Field                      | Description                                                  |
-| -------------------------- | ------------------------------------------------------------ |
-| `variables`                | User-configurable inputs with `{{placeholder}}` substitution |
-| `environment_variables`    | Key-value pairs passed to the container                      |
-| `port_mapping`             | Port mappings as `'host_port/protocol': container_port`      |
-| `file_mounts`              | Persistent volume paths (must start with `/`)                |
-| `resource_limit`           | Memory (e.g., `6GiB`) and CPU (e.g., `3`) limits             |
-| `docker_execution_command` | Custom container startup command                             |
+| Field                      | Description                                                                                     |
+| -------------------------- | ------------------------------------------------------------------------------------------------ |
+| `variables`                | User-configurable inputs with `{{placeholder}}` substitution                                     |
+| `environment_variables`    | Key-value pairs passed to the container                                                          |
+| `port_mapping`             | Port mappings as `'host_port/protocol': container_port` (values may be `{{var}}` placeholders)   |
+| `file_mounts`              | Persistent volume paths (must start with `/`)                                                    |
+| `host_mounts`              | Direct host bind mounts (`host_path` → `container_path`, optional `read_only`, defaults to read-only). Only administrators can create servers with host mounts — see [Volumes](/docs/configuration/volumes) |
+| `annotations`              | Docker container labels applied at launch. Values may contain `{{var}}` placeholders; keys with the reserved `cosy.` prefix are stripped at runtime |
+| `tags`                     | Categorization tags used for filtering in the creation wizard (e.g. `fabric`, `modpack`)         |
+| `resource_limit`           | Memory (e.g., `6GiB`) and CPU (e.g., `3`) limits; both may contain `{{var}}` placeholders        |
+| `docker_execution_command` | Custom container startup command                                                                 |
 
 All templates are validated against a JSON schema in CI before they can be merged.
