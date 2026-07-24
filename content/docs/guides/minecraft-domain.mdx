@@ -1,0 +1,123 @@
+---
+title: Minecraft Under Your Own Domain
+description: Walkthrough — host Minecraft servers behind the MC-Router proxy, reachable via a free play.cosy-hosting.net subdomain.
+icon: Globe
+---
+
+This guide walks you through hosting a Minecraft (Java Edition) server that players reach via a domain like `misty-castle.play.cosy-hosting.net` — no port numbers, and multiple servers can share the standard Minecraft port.
+
+## What You'll Build
+
+```
+Player types misty-castle.play.cosy-hosting.net in Minecraft
+        │
+        ▼  DNS (A record from the Cosy Domain Provider)
+Your host, port 25565
+        │
+        ▼
+MC-Router proxy (runs as a COSY game server)
+        │  routes by the hostname the player typed
+        ├── misty-castle.play.cosy-hosting.net → Paper server container
+        └── swift-harbor.play.cosy-hosting.net → Vanilla server container
+```
+
+The **MC-Router (Proxy)** template runs [itzg/mc-router](https://github.com/itzg/mc-router) as a regular COSY game server. It is the only server that publishes port `25565` on the host. The Minecraft servers themselves use the **(MC-Router)** template variants, which publish no host port at all — instead they carry a `mc-router.host` Docker label (set via the template `annotations` field), and the proxy automatically discovers them and forwards each connection to the server whose hostname matches what the player typed.
+
+> **When do you need this?** For a single server you could simply point a domain at your host and publish port 25565 directly. MC-Router pays off when you want **several servers on one machine** without making players remember port numbers — or when you want to add and remove servers without touching DNS beyond one A record per hostname.
+
+## Prerequisites
+
+- A running COSY instance — see [Installation](/docs/installation)
+- An **Admin or Owner** account: the proxy template mounts the Docker socket via a [host mount](/docs/configuration/volumes#host-mounts-advanced), which only administrators may do
+- Your host's **public IP address**
+- Minecraft **Java Edition** (MC-Router routes Java Edition connections)
+
+## Step 1: Claim a Subdomain
+
+If you already own a domain, create an A record pointing at your host and skip to Step 2. Otherwise, the **[Cosy Domain Provider](https://domain-provider.cosy-hosting.net)** gives you a free `*.play.cosy-hosting.net` subdomain:
+
+1. Register an account and verify your email address.
+2. Claim a subdomain — on the **free plan** the label is randomly generated as a two-word name like `misty-castle`, giving you the address `misty-castle.play.cosy-hosting.net`. **Plus** accounts can choose a custom label instead (3–63 characters, lowercase letters, digits, and hyphens; a few labels like `www` or `mail` are reserved).
+3. Set the **Target IP** to your host's public IP address (IPv6 optional).
+
+{/* screenshot: /guides/minecraft/domain-claim.png — the claim form with label and target IP filled in */}
+
+The subdomain starts in **PENDING** status while the DNS record is created and switches to **ACTIVE** once it is live. Records use a 5-minute TTL, so changes propagate quickly. You can verify resolution with `dig +short misty-castle.play.cosy-hosting.net`.
+
+{/* screenshot: /guides/minecraft/domain-active.png — dashboard showing the subdomain in ACTIVE state */}
+
+> Free accounts can claim **one** subdomain with a random name; Plus accounts can claim up to five and pick custom labels. Each Minecraft server behind MC-Router needs its own hostname, so plan accordingly (see [Adding More Servers](#adding-more-servers)).
+
+## Step 2: Create the MC-Router Proxy
+
+In COSY, create the proxy as a normal game server:
+
+1. Start the server creation wizard from the server yard.
+2. Select **Minecraft** in the game sidebar and filter by the `proxy` tag.
+3. Choose the **MC-Router (Proxy)** template — it has no variables to fill in.
+4. Create and **start** the server.
+
+{/* screenshot: /guides/minecraft/proxy-template.png — wizard step 1 with the MC-Router (Proxy) template selected */}
+
+What this template sets up:
+
+- Publishes host port **25565/tcp** — the single entrypoint all players connect to
+- Mounts the Docker socket **read-only** so it can watch for containers carrying the `mc-router.host` label (this is why creating it requires an administrator)
+- Sets `IN_DOCKER=true`, enabling automatic backend discovery — no proxy configuration needed, ever
+
+Make sure port `25565/tcp` is open in your host's firewall.
+
+## Step 3: Create the Minecraft Server
+
+Now create the actual game server:
+
+1. Start the creation wizard again and select **Minecraft**.
+2. Filter by the `mc-router` tag and pick a **(MC-Router)** variant — Paper, Fabric, Forge, NeoForge, Purpur, Vanilla, and modpack variants are available.
+3. Fill in the template variables: game version, memory — and most importantly the **Router Hostname**, which must be exactly the address players will type, e.g. `misty-castle.play.cosy-hosting.net`.
+4. Create and **start** the server. The first start pulls the image and generates the world, which can take a few minutes.
+
+{/* screenshot: /guides/minecraft/backend-variables.png — wizard step 2 with the Router Hostname variable filled in */}
+
+Unlike the regular Minecraft templates, the (MC-Router) variants publish **no host port**. The Router Hostname is written into the `mc-router.host` [annotation](/docs/templates#optional-fields) on the container, and the proxy picks it up automatically as soon as the container is running.
+
+{/* screenshot: /guides/minecraft/server-yard.png — server yard with the proxy and the Minecraft server running */}
+
+## Step 4: Connect
+
+In Minecraft Java Edition: **Multiplayer → Add Server**, and enter your subdomain as the server address — no port needed:
+
+```
+misty-castle.play.cosy-hosting.net
+```
+
+{/* screenshot: /guides/minecraft/minecraft-connect.png — Minecraft add-server screen with the subdomain entered */}
+
+The connection reaches MC-Router on port 25565, which reads the hostname from the Minecraft handshake and forwards you to the matching server.
+
+## Adding More Servers
+
+Every additional server follows the same pattern:
+
+1. Get another hostname pointing at the **same IP** — a second Domain Provider subdomain (Plus plan), or any DNS provider if you own a domain (a wildcard record like `*.mc.example.com` lets you add servers without touching DNS at all).
+2. Create another **(MC-Router)** server with that hostname as its Router Hostname.
+
+That's it — no proxy configuration, no new ports, no firewall changes. All servers share port 25565.
+
+## Troubleshooting
+
+| Symptom | Likely cause |
+| --- | --- |
+| Subdomain stuck in **PENDING** / **FAILED** | DNS record creation hasn't completed — wait a moment; if it stays FAILED, re-check the target IP or contact support |
+| "Unknown host" in Minecraft | DNS not propagated yet — check with `dig +short <hostname>`; records have a 5-minute TTL |
+| Connection refused / timeout | Proxy server not running, or port 25565/tcp blocked by the host firewall |
+| "No route to server" or wrong server | The address the player typed doesn't exactly match any server's Router Hostname — MC-Router matches the exact string from the handshake |
+| Changed the Router Hostname but the old one still works | Annotations are applied when the container launches — **restart** the Minecraft server after changing its hostname |
+| The MC-Router proxy won't start (port 25565 already allocated) | Another server already publishes host port 25565 — typically a Minecraft server created from a regular (non-MC-Router) template. Stop that server and either move it to a different host port or recreate it from a (MC-Router) variant; only the proxy should publish 25565 |
+
+## How It Works Under the Hood
+
+The pieces used here are all standard COSY features:
+
+- The proxy's Docker socket access is a read-only [host mount](/docs/configuration/volumes#host-mounts-advanced) — which is why it's admin-only.
+- The Router Hostname is a template [variable](/docs/templates#template-variables) substituted into a container [annotation](/docs/templates#optional-fields) (`mc-router.host`) — annotations become Docker labels at launch, and `itzg/mc-router` watches the Docker API for exactly this label.
+- Because the game servers publish no host ports, there are no port collisions no matter how many servers you run.
