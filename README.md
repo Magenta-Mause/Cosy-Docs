@@ -159,7 +159,7 @@ All scripts are defined in `package.json` and run with Bun:
 
 ## Deployment
 
-The production image is built from `docker/Dockerfile`: a multi-stage build compiles the static site with Bun and serves the output (`dist/client`) with **nginx**. On tag pushes (`v*.*.*`), the **Release** GitHub Actions workflow builds and publishes the image to `ghcr.io/Magenta-Mause/cosy-docs`.
+The production image is built from `docker/Dockerfile`: a multi-stage build compiles the static site with Bun and serves the output (`dist/client`) with **nginx**. On tag pushes (`v*.*.*`), the **Release** GitHub Actions workflow builds and publishes the image to `ghcr.io/magenta-mause/cosy-docs`.
 
 Kubernetes manifests for deploying that image (Deployment, Service, Ingress, and a Traefik cache middleware) live in the `argo/` directory.
 
