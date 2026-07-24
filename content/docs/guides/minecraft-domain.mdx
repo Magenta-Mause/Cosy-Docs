@@ -21,7 +21,7 @@ MC-Router proxy (runs as a COSY game server)
         └── swift-harbor.play.cosy-hosting.net → Vanilla server container
 ```
 
-The **MC-Router (Proxy)** template runs [itzg/mc-router](https://github.com/itzg/mc-router) as a regular COSY game server. It is the only server that publishes port `25565` on the host. The Minecraft servers themselves use the **(MC-Router)** template variants, which publish no host port at all — instead they carry a `mc-router.host` container annotation, and the proxy automatically discovers them and forwards each connection to the server whose hostname matches what the player typed.
+The **MC-Router (Proxy)** template runs [itzg/mc-router](https://github.com/itzg/mc-router) as a regular COSY game server. It is the only server that publishes port `25565` on the host. The Minecraft servers themselves use the **(MC-Router)** template variants, which publish no host port at all — instead they carry a `mc-router.host` Docker label (set via the template `annotations` field), and the proxy automatically discovers them and forwards each connection to the server whose hostname matches what the player typed.
 
 > **When do you need this?** For a single server you could simply point a domain at your host and publish port 25565 directly. MC-Router pays off when you want **several servers on one machine** without making players remember port numbers — or when you want to add and remove servers without touching DNS beyond one A record per hostname.
 
