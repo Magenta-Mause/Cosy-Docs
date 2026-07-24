@@ -28,6 +28,18 @@ In the **Settings** view, you can add volume mounts by specifying:
 
 COSY automatically manages the host-side path. Each volume mount is stored under the COSY volumes directory (default: `/opt/cosy/volumes`) with an auto-generated UUID as the directory name.
 
+## Host Mounts (Advanced)
+
+In addition to COSY-managed volumes, a server can bind-mount an **explicit host path** into the container. Host mounts are configured under **Advanced Settings** (in the creation wizard and the server settings) by specifying:
+
+| Field              | Description                                        | Example                |
+| ------------------ | -------------------------------------------------- | ---------------------- |
+| **Host Path**      | Absolute path on the Docker host                   | `/var/run/docker.sock` |
+| **Container Path** | Absolute path inside the container                 | `/var/run/docker.sock` |
+| **Read-only**      | Whether the mount is writable from the container   | enabled                |
+
+Unlike regular volumes, the host-side path is *not* managed by COSY — you point directly at a directory or file on the host. Because this grants access to arbitrary host paths, **only administrators (Admin or Owner) can create or change host mounts**. [Templates](/docs/templates) may also define host mounts via the `host_mounts` field; these default to read-only and are subject to the same restriction at creation time.
+
 ## Data Lifecycle
 
 - **Server start** — Volumes are mounted into the new container

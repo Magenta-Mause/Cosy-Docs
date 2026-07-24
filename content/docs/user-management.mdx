@@ -18,25 +18,32 @@ There are three roles with different privilege levels:
 
 ### Role Comparison
 
-| Capability         | Owner                  | Admin           | User     |
-| ------------------ | ---------------------- | --------------- | -------- |
-| Manage own servers | Yes                    | Yes             | Yes      |
-| Manage all servers | Yes                    | Yes             | No       |
-| Manage users       | Yes                    | Users only      | No       |
-| Assign roles       | Yes                    | No              | No       |
-| Delete users       | Yes (not self)         | Users only      | Self only |
-| Resource quotas    | No limitations enfored | Enforced if set | Enforced if set |
+| Capability          | Owner                  | Admin           | User     |
+| ------------------- | ---------------------- | --------------- | -------- |
+| Manage own servers  | Yes                    | Yes             | Yes      |
+| Manage all servers  | Yes                    | Yes             | No       |
+| Create game servers | Yes                    | Yes             | Only if enabled |
+| Manage users        | Yes                    | Users only      | No       |
+| Assign roles        | Yes                    | No              | No       |
+| Delete users        | Yes (not self)         | Users only      | Self only |
+| Resource quotas     | No limitations enfored | Enforced if set | Enforced if set |
 
 ## Inviting Users
 
 1. Navigate to the **User Management** page
 2. Click **Create Invite**
-3. Optionally pre-set a username, role, and resource limits
+3. Optionally pre-set a username, role, resource limits, and whether the account may create game servers
 4. A one-time invite link/key is generated
 5. Share the key with the person you want to invite
 6. They visit COSY, enter the invite key, set their password, and their account is created
 
 Invites are **single-use** — once redeemed, the key is invalidated. The Owner can revoke pending invites that haven't been used yet.
+
+## Game Server Creation Permission
+
+Whether a **User** account may create game servers is controlled by a per-user **create game servers** toggle. Users without it don't see the create option in the server yard and cannot create servers — they can still fully manage servers they own (e.g. received via [ownership transfer](/docs/features/access-management)) or that are shared with them.
+
+Admins and the Owner can always create servers; the toggle only applies to the User role. It can be changed at any time from the user's detail page in **User Management**, and pre-set when creating an invite.
 
 ## Resource Limits
 
