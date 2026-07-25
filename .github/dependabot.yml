@@ -1,14 +1,23 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
+  # "bun", not "npm": this repo's lockfile is bun.lock, which dependabot only
+  # maintains under the bun ecosystem. Under "npm" it rewrote package.json and
+  # left bun.lock untouched, so every PR failed CI on --frozen-lockfile.
+  - package-ecosystem: "bun"
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
     groups:
-      npm-dependencies:
+      # Majors are excluded from the group on purpose, so they arrive as
+      # individual PRs that can be migrated one at a time. Grouping them here
+      # meant one breaking bump blocked every safe bump riding along with it.
+      bun-dependencies:
         patterns:
           - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
   - package-ecosystem: "docker"
     directory: "/docker"
@@ -19,6 +28,9 @@ updates:
       docker-dependencies:
         patterns:
           - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -29,3 +41,6 @@ updates:
       github-actions-dependencies:
         patterns:
           - "*"
+        update-types:
+          - "minor"
+          - "patch"
