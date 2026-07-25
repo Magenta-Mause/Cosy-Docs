@@ -20,6 +20,18 @@ import { YouTubeEmbed } from "@/components/youtube-embed";
 import { baseOptions } from "@/lib/layout.shared";
 import { source } from "@/lib/source";
 export const Route = createFileRoute("/docs/$")({
+  // `loader` MUST stay declared before `head`. Both are context-sensitive arrow functions
+  // whose parameter types come from the same inference type parameter (the route's loader
+  // type). TypeScript types such properties in source order, so if `head` comes first it
+  // forces that type parameter to its default (`undefined`) just to give `loaderData` a
+  // type — after which `loader` can no longer contribute. The result is `loaderData`
+  // narrowing to `never` in `head` and `Route.useLoaderData()` returning `undefined`.
+  loader: async ({ params }) => {
+    const slugs = params._splat?.split("/") ?? [];
+    const data = await loader({ data: slugs });
+    await clientLoader.preload(data.path);
+    return data;
+  },
   head: ({ loaderData }) => ({
     meta: [
       {
@@ -37,12 +49,6 @@ export const Route = createFileRoute("/docs/$")({
     ],
   }),
   component: Page,
-  loader: async ({ params }) => {
-    const slugs = params._splat?.split("/") ?? [];
-    const data = await loader({ data: slugs });
-    await clientLoader.preload(data.path);
-    return data;
-  },
 });
 
 const loader = createServerFn({
@@ -90,7 +96,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
 function Page() {
   const data = Route.useLoaderData();
   const Content = clientLoader.getComponent(data.path);
-  const tree = useMemo(() => transformPageTree(data.tree as PageTree.Folder), [data.tree]);
+  const tree = useMemo(() => transformPageTree(data.tree as PageTree.Root), [data.tree]);
 
   return (
     <DocsLayout

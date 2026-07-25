@@ -7,7 +7,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "start": "serve dist/client",
-    "types:check": "fumadocs-mdx && tsc --noEmit",
+    "types:check": "tsr generate && fumadocs-mdx && tsc --noEmit",
     "postinstall": "fumadocs-mdx",
     "lint": "biome check",
     "lint:fix": "biome format --write"
@@ -34,6 +34,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.5.5",
     "@tailwindcss/vite": "^4.3.3",
+    "@tanstack/router-cli": "^1.167.21",
     "@types/mdx": "^2.0.14",
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.17",
