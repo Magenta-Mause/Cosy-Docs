@@ -23,7 +23,7 @@
     "fumadocs-core": "16.2.3",
     "fumadocs-mdx": "14.1.0",
     "fumadocs-ui": "16.2.3",
-    "lucide": "^0.575.0",
+    "lucide": "^1.26.0",
     "lucide-react": "^0.575.0",
     "lucide-static": "^0.552.0",
     "radix-ui": "^1.4.3",
