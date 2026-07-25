@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "fumadocs-ui/css/style.css";
-@import "fumadocs-ui/css/layouts/docs.css";
 @import "fumadocs-ui/css/neutral.css";
 
 @theme inline {
