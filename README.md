@@ -1,59 +1,222 @@
-# cosy-landing-page
+# Cosy-Docs
 
-## After cloning this repository
+> The official documentation site and public landing page for **COSY** — a self-hostable platform for orchestrating and managing game servers.
 
-In order to get you started writing docs/enhancing our landing page, please make sure you follow these steps:
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Release](https://img.shields.io/github/v/release/Magenta-Mause/Cosy-Docs)](https://github.com/Magenta-Mause/Cosy-Docs/releases)
+[![Lint](https://github.com/Magenta-Mause/Cosy-Docs/actions/workflows/lint.yml/badge.svg)](https://github.com/Magenta-Mause/Cosy-Docs/actions/workflows/lint.yml)
+[![Build](https://github.com/Magenta-Mause/Cosy-Docs/actions/workflows/build.yml/badge.svg)](https://github.com/Magenta-Mause/Cosy-Docs/actions/workflows/build.yml)
+[![Types](https://github.com/Magenta-Mause/Cosy-Docs/actions/workflows/types-check.yml/badge.svg)](https://github.com/Magenta-Mause/Cosy-Docs/actions/workflows/types-check.yml)
+[![Built with Bun](https://img.shields.io/badge/Built%20with-Bun-000000?logo=bun&logoColor=white)](https://bun.com)
+[![TanStack Start](https://img.shields.io/badge/TanStack-Start-EF4444?logo=react&logoColor=white)](https://tanstack.com/start)
+[![Fumadocs](https://img.shields.io/badge/Docs-Fumadocs-0EA5E9)](https://fumadocs.dev)
 
-### 1. Bun Installation
-We use `bun` as our bundler. For the installation, proceed as follows, depending on your operating system:
+---
 
-#### macOS / Linux
+## Overview
+
+**COSY** (Cost Optimized Server Yard) is a self-hostable platform for managing game servers (Minecraft, CS2, Palworld, Terraria, ARK, and more) through a beautiful, gamified "village" web interface, where each server is represented as a building in a pixel-art world. Every game server runs isolated in its own container, and COSY is optimized to run cost-efficiently on a single host while still supporting Kubernetes scaling.
+
+**Cosy-Docs** is the repository behind two public-facing surfaces of the project:
+
+- The **landing page** — <https://cosy-hosting.net>
+- The **documentation site** (served under `/docs`) — <https://cosy-docs.jannekeipert.de/docs> — covering installation, configuration, and day-to-day usage of COSY
+
+It is a fully static, prerendered site built with [TanStack Start](https://tanstack.com/start) and [Fumadocs](https://fumadocs.dev), bundled with [Vite](https://vite.dev), and run/packaged with [Bun](https://bun.com). Documentation content is authored in **MDX** under `content/docs`.
+
+### Key features
+
+- Gamified landing page introducing COSY
+- Searchable MDX documentation (installation, configuration, features, guides) powered by Fumadocs + Orama
+- Fully static output (prerendered) — served by any static file host / nginx
+- Fast, type-safe React 19 stack with Tailwind CSS v4 and Biome for linting/formatting
+
+### Screenshots
+
+| Landing page (`/`) | Documentation site (`/docs`) |
+| --- | --- |
+| [![The COSY landing page](./.github/assets/landing-page.png)](https://cosy-hosting.net) | [![The COSY documentation site](./.github/assets/docs-site.png)](https://cosy-docs.jannekeipert.de/docs) |
+
+### Related repositories
+
+Cosy-Docs is one component of the wider COSY project. The other repositories in the [Magenta-Mause](https://github.com/Magenta-Mause) organization are:
+
+| Repository | Description |
+| --- | --- |
+| [Cosy](https://github.com/Magenta-Mause/Cosy) | Main project & install scripts (the umbrella repo; all issues are tracked here) |
+| [Cosy-Frontend](https://github.com/Magenta-Mause/Cosy-Frontend) | React + TypeScript web interface (the "Village" UI) |
+| [Cosy-Backend](https://github.com/Magenta-Mause/Cosy-Backend) | Java Spring Boot control-plane / API |
+| [Cosy-Template-Service](https://github.com/Magenta-Mause/Cosy-Template-Service) | Go microservice that fetches and serves the COSY templates |
+| [Cosy-Templates](https://github.com/Magenta-Mause/Cosy-Templates) | Official & community-maintained Docker Compose / Kubernetes game templates |
+
+You can browse the full organization for additional components (system tests, deployment configs, the Minecraft integration mod, and the SteamGridDB game-asset service — the latter is in maintenance mode, as game data has moved to Cosy-Template-Service).
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- **[Bun](https://bun.com)** — used as the package manager, task runner, and build tool. The Docker build uses the `oven/bun:latest` image; installing the current stable Bun locally is recommended.
+- **[Git](https://git-scm.com/)** — to clone the repository.
+- **(Optional) [Docker](https://www.docker.com/)** — only needed if you want to build/run the production container image.
+
+Installing Bun:
+
 ```sh
+# macOS / Linux
 curl -fsSL https://bun.com/install | bash
-```
 
-#### Windows
-```sh
+# Windows (PowerShell)
 powershell -c "irm bun.sh/install.ps1|iex"
-```
 
-#### npm
-```sh
+# via npm
 npm install -g bun
 ```
 
-You may need to restart your terminal/command line after installation to make sure bun is availabel for use.
+You may need to restart your terminal after installation. See the [Bun installation docs](https://bun.com/docs/installation) if you run into issues.
 
-If you encounter any issues, feel free to consult the [bun documentation](https://bun.com/docs/installation) or ask in the GC :)
-
-### 2. Package Installation
-We make use of various libraries to make our life easier (duh). Before starting development or behold - trying to start the project, please install all dependencies using the following command:
+### Installation
 
 ```sh
-bun i
+git clone https://github.com/Magenta-Mause/Cosy-Docs.git
+cd Cosy-Docs
+bun install
 ```
 
-### 3. VS Code Setup
+`bun install` runs a `postinstall` step (`fumadocs-mdx`) that generates the MDX source map needed by the app.
 
-While you are technicall ready to [start/build the frontend](#starting--building), you might want to make your development experience better by following these vs code integrations:
+### Configuration
 
-- Install the [Biome](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) extension for code linting / formatting support
-- Install the [TailwindCSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) extension for tailwind class intellisense
-- Install the [React/Redux/React-Native snippets](https://marketplace.visualstudio.com/items?itemName=dsznajder.es7-react-js-snippets) extension which allows you to automatically generate boilerplate component code by typing e.g. `tsrfce`
+This is a static documentation/landing site and does **not** read any runtime environment variables — there is intentionally no `.env` / `.env.example`. Configuration lives in code:
 
-## Starting / Building
+- **`source.config.ts`** — Fumadocs MDX configuration (points at `content/docs`).
+- **`vite.config.ts`** — Vite + TanStack Start config (dev server runs on port `3000`, host `0.0.0.0`; prerendering options).
+- **`biome.json`** — linting/formatting rules.
+- **`components.json`** — shadcn/ui component configuration.
 
-To run the frontend with hot-reloading, please run:
+To edit or add documentation, create/modify `.mdx` files under `content/docs` (grouped by folder, with `meta.json` controlling ordering/navigation).
+
+### Quick Start
+
+Start the dev server with hot-reloading:
+
 ```sh
 bun run dev
 ```
 
-If you want to create a final build, run:
-```sh
-bun run build
+Then open **http://localhost:3000** — the landing page is at `/` and the documentation at `/docs`.
+
+---
+
+## Development
+
+### Project structure
+
+```
+Cosy-Docs/
+├── content/docs/       # MDX documentation content (installation, configuration, features, guides)
+├── src/
+│   ├── routes/         # TanStack Start routes (index, /docs, /api/search)
+│   ├── components/     # React UI components (landing page, docs helpers, shadcn/ui)
+│   ├── lib/            # Shared helpers, constants, Fumadocs source & layout
+│   ├── styles/         # Tailwind / global CSS
+│   ├── assets/         # Images, fonts, cursors
+│   └── router.tsx      # Router setup
+├── public/             # Static public assets
+├── docker/Dockerfile   # Multi-stage build → nginx static image
+├── argo/               # Kubernetes manifests (Deployment, Service, Ingress, cache middleware)
+├── source.config.ts    # Fumadocs MDX config
+├── vite.config.ts      # Vite + TanStack Start config
+└── biome.json          # Biome lint/format config
 ```
 
-and then start your production build as follows:
-```sh
-bun run start
-```
+### Available commands
+
+All scripts are defined in `package.json` and run with Bun:
+
+| Command | Description |
+| --- | --- |
+| `bun run dev` | Start the Vite dev server with hot-reloading (http://localhost:3000) |
+| `bun run build` | Produce a production build in `dist/` |
+| `bun run start` | Serve the built `dist/client` output locally (via `serve`) |
+| `bun run types:check` | Regenerate the route tree (`tsr generate`) and MDX types, then run `tsc --noEmit` |
+| `bun run lint` | Check formatting/linting with Biome |
+| `bun run lint:fix` | Format the codebase with Biome (`biome format --write` — formatting only; lint rule fixes need `biome check --write`) |
+
+### Development workflow
+
+1. Create a feature branch off `main`.
+2. Make your changes — for docs, edit MDX under `content/docs`; for the site/UI, edit files under `src/`.
+3. Run `bun run dev` and verify your changes at http://localhost:3000.
+4. Run `bun run lint`, `bun run types:check` and `bun run build` before pushing. Use `bun run lint:fix` to apply formatting, and `bunx biome check --write` to apply lint-rule and import-order fixes.
+5. Open a pull request against `main`. Three CI workflows gate every pull request: **Lint** (`bun run lint`), **Build** (`bun run build`) and **Types** (`bun run types:check`).
+
+**Editor setup (recommended for VS Code):**
+
+- [Biome](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) — linting/formatting
+- [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) — Tailwind class completion
+- [ES7+ React/Redux/React-Native snippets](https://marketplace.visualstudio.com/items?itemName=dsznajder.es7-react-js-snippets) — component boilerplate
+
+### Major dependencies
+
+- **[TanStack Start](https://tanstack.com/start)** / **[TanStack Router](https://tanstack.com/router)** — full-stack React framework and routing (SPA + prerendering).
+- **[Fumadocs](https://fumadocs.dev)** (`fumadocs-core`, `fumadocs-ui`, `fumadocs-mdx`) — documentation framework and MDX pipeline.
+- **[@orama/orama](https://orama.com/)** — client-side full-text search for the docs.
+- **[React 19](https://react.dev/)**, **[Tailwind CSS v4](https://tailwindcss.com/)**, **[shadcn/ui](https://ui.shadcn.com/)** + **[Radix UI](https://www.radix-ui.com/)**, **[lucide](https://lucide.dev/)** icons.
+- **[Vite 7](https://vite.dev)** — bundler/dev server. **[Biome](https://biomejs.dev/)** — linter/formatter.
+
+---
+
+## Deployment
+
+The production image is built from `docker/Dockerfile`: a multi-stage build compiles the static site with Bun and serves the output (`dist/client`) with **nginx**. Every push to `main` (excluding changes limited to `argo/`, `README.md`, or `LICENSE`) triggers the **Release** GitHub Actions workflow, which publishes the image to `ghcr.io/magenta-mause/cosy-docs` tagged `sha-<short-sha>` and `latest`, then commits the new tag into `argo/deployment.yaml` — ArgoCD picks it up from there.
+
+Kubernetes manifests for deploying that image (Deployment, Service, Ingress, and a Traefik cache middleware) live in the `argo/` directory.
+
+---
+
+## Documentation
+
+The rendered documentation is the primary output of this repository. Content sources live under `content/docs`:
+
+- **Installation** — Docker & Kubernetes install guides, and uninstallation
+- **Getting Started** — the COSY concept and creating your first game server
+- **Templates** — pre-configured game server templates and how they are sourced
+- **Configuration** — images/ports, environment variables, volumes, RCON, resource limits, execution commands
+- **User Management** — invitations, roles, and per-user resource limits
+- **Features** — dashboard & metrics, console, file management, access management, webhooks, public dashboard
+- **Guides** — task-oriented walkthroughs
+
+To preview the docs locally, run `bun run dev` and visit `/docs`.
+
+---
+
+## Contributing
+
+Contributions are welcome! Contribution guidelines are being consolidated org-wide in the [Magenta-Mause/.github](https://github.com/Magenta-Mause/.github) community-health repository; until a `CONTRIBUTING.md` lands there, follow the workflow described in [Development workflow](#development-workflow) above.
+
+**Reporting bugs & requesting features:** Issues for the entire COSY project are centralized in the main repository. Please open bug reports and feature requests in **[Magenta-Mause/Cosy → Issues](https://github.com/Magenta-Mause/Cosy/issues/new/choose)**. (Note: issues opened directly on this repository are automatically redirected and closed.)
+
+**Pull requests** are made against this repository's `main` branch. Before opening a PR, please run `bun run lint`, `bun run types:check` and `bun run build` — all three are enforced by CI on every pull request.
+
+---
+
+## License
+
+This project is licensed under the **MIT License** — see the [LICENSE](./LICENSE) file for details.
+
+---
+
+## Contact & Support
+
+- **Discord:** [Join the COSY community](https://discord.gg/Ns2Z6DavfA) for questions, support, and feature requests.
+- **Documentation:** the docs served by this site are the best place to start.
+- **Issues:** [Magenta-Mause/Cosy](https://github.com/Magenta-Mause/Cosy/issues) (central issue tracker for the project).
+- **Releases:** [Cosy-Docs releases](https://github.com/Magenta-Mause/Cosy-Docs/releases).
+
+---
+
+## Acknowledgments
+
+Built by [Magenta-Mause](https://github.com/Magenta-Mause) with [TanStack Start](https://tanstack.com/start), [Fumadocs](https://fumadocs.dev), [Vite](https://vite.dev), [Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/), and [Bun](https://bun.com).
