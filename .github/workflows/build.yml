@@ -1,0 +1,26 @@
+name: Build
+
+# Lint alone cannot catch a broken build: a dependency bump can satisfy the linter and still fail
+# `vite build` (e.g. a plugin requiring a newer Vite than the one installed). This job is what makes
+# such a bump visible on the PR instead of on main.
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun ci
+
+      - name: Build site
+        run: bun run build
