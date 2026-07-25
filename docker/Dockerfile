@@ -1,7 +1,7 @@
 FROM oven/bun:latest AS builder
 WORKDIR /app
 
-COPY .. .
+COPY . .
 
 RUN bun install --ci
 
