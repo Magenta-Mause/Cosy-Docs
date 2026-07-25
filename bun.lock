@@ -15,7 +15,7 @@
         "fumadocs-core": "16.2.3",
         "fumadocs-mdx": "14.1.0",
         "fumadocs-ui": "16.2.3",
-        "lucide": "^0.575.0",
+        "lucide": "^1.26.0",
         "lucide-react": "^0.575.0",
         "lucide-static": "^0.552.0",
         "radix-ui": "^1.4.3",
@@ -1046,7 +1046,7 @@
 
     "lru-cache": ["lru-cache@5.1.1", "", { "dependencies": { "yallist": "^3.0.2" } }, "sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w=="],
 
-    "lucide": ["lucide@0.575.0", "", {}, "sha512-+xwqZpvrqPioU8bSH49zH2xARfnKyZgIjdnfbex0CrURB3q4wNFhinYN1Z9Q3lE16Q/6N9iEXnStvyS3c70RKw=="],
+    "lucide": ["lucide@1.26.0", "", {}, "sha512-koKiuPC/3VLiIGY+hXn9pSurD4b54LgvkNqb9FjF8A4l5ftgRwFgmpPHoOnMLPbNj8oiDjMfMsnU3FITuxZ6Mw=="],
 
     "lucide-react": ["lucide-react@0.575.0", "", { "peerDependencies": { "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0" } }, "sha512-VuXgKZrk0uiDlWjGGXmKV6MSk9Yy4l10qgVvzGn2AWBx1Ylt0iBexKOAoA6I7JO3m+M9oeovJd3yYENfkUbOeg=="],
 
