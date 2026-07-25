@@ -12,12 +12,12 @@
 
 ## Overview
 
-**COSY** (Cost Optimized Server Yard) is a self-hostable platform for managing game servers (Minecraft, Valheim, CS:GO, and more) through a beautiful, gamified "village" web interface, where each server is represented as a building in a pixel-art world. Every game server runs isolated in its own container, and COSY is optimized to run cost-efficiently on a single host while still supporting Kubernetes scaling.
+**COSY** (Cost Optimized Server Yard) is a self-hostable platform for managing game servers (Minecraft, CS2, Palworld, Terraria, ARK, and more) through a beautiful, gamified "village" web interface, where each server is represented as a building in a pixel-art world. Every game server runs isolated in its own container, and COSY is optimized to run cost-efficiently on a single host while still supporting Kubernetes scaling.
 
 **Cosy-Docs** is the repository behind two public-facing surfaces of the project:
 
-- The **landing page** (`cosy-hosting.net`)
-- The **documentation site** (served under `/docs`), covering installation, configuration, and day-to-day usage of COSY
+- The **landing page** — <https://cosy-hosting.net>
+- The **documentation site** (served under `/docs`) — <https://cosy-docs.jannekeipert.de/docs> — covering installation, configuration, and day-to-day usage of COSY
 
 It is a fully static, prerendered site built with [TanStack Start](https://tanstack.com/start) and [Fumadocs](https://fumadocs.dev), bundled with [Vite](https://vite.dev), and run/packaged with [Bun](https://bun.com). Documentation content is authored in **MDX** under `content/docs`.
 
@@ -37,8 +37,10 @@ Cosy-Docs is one component of the wider COSY project. The other repositories in 
 | [Cosy](https://github.com/Magenta-Mause/Cosy) | Main project & install scripts (the umbrella repo; all issues are tracked here) |
 | [Cosy-Frontend](https://github.com/Magenta-Mause/Cosy-Frontend) | React + TypeScript web interface (the "Village" UI) |
 | [Cosy-Backend](https://github.com/Magenta-Mause/Cosy-Backend) | Java Spring Boot control-plane / API |
+| [Cosy-Template-Service](https://github.com/Magenta-Mause/Cosy-Template-Service) | Go microservice that fetches and serves the COSY templates |
+| [Cosy-Templates](https://github.com/Magenta-Mause/Cosy-Templates) | Official & community-maintained Docker Compose / Kubernetes game templates |
 
-You can browse the full organization for additional components (e.g. the Rust game-asset API and deployment configs).
+You can browse the full organization for additional components (system tests, deployment configs, the Minecraft integration mod, and the SteamGridDB game-asset service — the latter is in maintenance mode, as game data has moved to Cosy-Template-Service).
 
 ---
 
@@ -131,14 +133,15 @@ All scripts are defined in `package.json` and run with Bun:
 | `bun run start` | Serve the built `dist/client` output locally (via `serve`) |
 | `bun run types:check` | Regenerate MDX types and run `tsc --noEmit` |
 | `bun run lint` | Check formatting/linting with Biome |
-| `bun run lint:fix` | Auto-format the codebase with Biome |
+| `bun run lint:fix` | Format the codebase with Biome (`biome format --write` — formatting only; lint rule fixes need `biome check --write`) |
 
 ### Development workflow
 
 1. Create a feature branch off `main`.
 2. Make your changes — for docs, edit MDX under `content/docs`; for the site/UI, edit files under `src/`.
 3. Run `bun run dev` and verify your changes at http://localhost:3000.
-4. Run `bun run lint` (and `bun run lint:fix` to auto-format) and `bun run types:check` before pushing.
+4. Run `bun run lint` before pushing. Use `bun run lint:fix` to apply formatting, and `bunx biome check --write` to apply lint-rule and import-order fixes.
+   Also run `bun run types:check` — note that it is not yet wired into CI and currently reports pre-existing `tsconfig.json` errors on `main`, so compare against the baseline rather than expecting a clean run.
 5. Open a pull request against `main`. The **Lint** CI workflow runs on every pull request.
 
 **Editor setup (recommended for VS Code):**
@@ -159,7 +162,7 @@ All scripts are defined in `package.json` and run with Bun:
 
 ## Deployment
 
-The production image is built from `docker/Dockerfile`: a multi-stage build compiles the static site with Bun and serves the output (`dist/client`) with **nginx**. On tag pushes (`v*.*.*`), the **Release** GitHub Actions workflow builds and publishes the image to `ghcr.io/magenta-mause/cosy-docs`.
+The production image is built from `docker/Dockerfile`: a multi-stage build compiles the static site with Bun and serves the output (`dist/client`) with **nginx**. Every push to `main` (excluding changes limited to `argo/`, `README.md`, or `LICENSE`) triggers the **Release** GitHub Actions workflow, which publishes the image to `ghcr.io/magenta-mause/cosy-docs` tagged `sha-<short-sha>` and `latest`, then commits the new tag into `argo/deployment.yaml` — ArgoCD picks it up from there.
 
 Kubernetes manifests for deploying that image (Deployment, Service, Ingress, and a Traefik cache middleware) live in the `argo/` directory.
 
@@ -181,11 +184,11 @@ To preview the docs locally, run `bun run dev` and visit `/docs`.
 
 ## Contributing
 
-Contributions are welcome! Contribution guidelines are maintained org-wide in the [Magenta-Mause/.github](https://github.com/Magenta-Mause/.github) community-health repository.
+Contributions are welcome! Contribution guidelines are being consolidated org-wide in the [Magenta-Mause/.github](https://github.com/Magenta-Mause/.github) community-health repository; until a `CONTRIBUTING.md` lands there, follow the workflow described in [Development workflow](#development-workflow) above.
 
 **Reporting bugs & requesting features:** Issues for the entire COSY project are centralized in the main repository. Please open bug reports and feature requests in **[Magenta-Mause/Cosy → Issues](https://github.com/Magenta-Mause/Cosy/issues/new/choose)**. (Note: issues opened directly on this repository are automatically redirected and closed.)
 
-**Pull requests** are made against this repository's `main` branch. Before opening a PR, please run `bun run lint` and `bun run types:check`.
+**Pull requests** are made against this repository's `main` branch. Before opening a PR, please run `bun run lint` (enforced by CI) and `bun run types:check` (see the caveat in [Development workflow](#development-workflow)).
 
 ---
 
