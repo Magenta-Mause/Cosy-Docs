@@ -3,7 +3,10 @@
 > The official documentation site and public landing page for **COSY** — a self-hostable platform for orchestrating and managing game servers.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Release](https://img.shields.io/github/v/release/Magenta-Mause/Cosy-Docs)](https://github.com/Magenta-Mause/Cosy-Docs/releases)
 [![Lint](https://github.com/Magenta-Mause/Cosy-Docs/actions/workflows/lint.yml/badge.svg)](https://github.com/Magenta-Mause/Cosy-Docs/actions/workflows/lint.yml)
+[![Build](https://github.com/Magenta-Mause/Cosy-Docs/actions/workflows/build.yml/badge.svg)](https://github.com/Magenta-Mause/Cosy-Docs/actions/workflows/build.yml)
+[![Types](https://github.com/Magenta-Mause/Cosy-Docs/actions/workflows/types-check.yml/badge.svg)](https://github.com/Magenta-Mause/Cosy-Docs/actions/workflows/types-check.yml)
 [![Built with Bun](https://img.shields.io/badge/Built%20with-Bun-000000?logo=bun&logoColor=white)](https://bun.com)
 [![TanStack Start](https://img.shields.io/badge/TanStack-Start-EF4444?logo=react&logoColor=white)](https://tanstack.com/start)
 [![Fumadocs](https://img.shields.io/badge/Docs-Fumadocs-0EA5E9)](https://fumadocs.dev)
@@ -27,6 +30,12 @@ It is a fully static, prerendered site built with [TanStack Start](https://tanst
 - Searchable MDX documentation (installation, configuration, features, guides) powered by Fumadocs + Orama
 - Fully static output (prerendered) — served by any static file host / nginx
 - Fast, type-safe React 19 stack with Tailwind CSS v4 and Biome for linting/formatting
+
+### Screenshots
+
+| Landing page (`/`) | Documentation site (`/docs`) |
+| --- | --- |
+| [![The COSY landing page](./.github/assets/landing-page.png)](https://cosy-hosting.net) | [![The COSY documentation site](./.github/assets/docs-site.png)](https://cosy-docs.jannekeipert.de/docs) |
 
 ### Related repositories
 
@@ -131,7 +140,7 @@ All scripts are defined in `package.json` and run with Bun:
 | `bun run dev` | Start the Vite dev server with hot-reloading (http://localhost:3000) |
 | `bun run build` | Produce a production build in `dist/` |
 | `bun run start` | Serve the built `dist/client` output locally (via `serve`) |
-| `bun run types:check` | Regenerate MDX types and run `tsc --noEmit` |
+| `bun run types:check` | Regenerate the route tree (`tsr generate`) and MDX types, then run `tsc --noEmit` |
 | `bun run lint` | Check formatting/linting with Biome |
 | `bun run lint:fix` | Format the codebase with Biome (`biome format --write` — formatting only; lint rule fixes need `biome check --write`) |
 
@@ -140,9 +149,8 @@ All scripts are defined in `package.json` and run with Bun:
 1. Create a feature branch off `main`.
 2. Make your changes — for docs, edit MDX under `content/docs`; for the site/UI, edit files under `src/`.
 3. Run `bun run dev` and verify your changes at http://localhost:3000.
-4. Run `bun run lint` before pushing. Use `bun run lint:fix` to apply formatting, and `bunx biome check --write` to apply lint-rule and import-order fixes.
-   Also run `bun run types:check` — note that it is not yet wired into CI and currently reports pre-existing `tsconfig.json` errors on `main`, so compare against the baseline rather than expecting a clean run.
-5. Open a pull request against `main`. The **Lint** CI workflow runs on every pull request.
+4. Run `bun run lint`, `bun run types:check` and `bun run build` before pushing. Use `bun run lint:fix` to apply formatting, and `bunx biome check --write` to apply lint-rule and import-order fixes.
+5. Open a pull request against `main`. Three CI workflows gate every pull request: **Lint** (`bun run lint`), **Build** (`bun run build`) and **Types** (`bun run types:check`).
 
 **Editor setup (recommended for VS Code):**
 
@@ -172,9 +180,11 @@ Kubernetes manifests for deploying that image (Deployment, Service, Ingress, and
 
 The rendered documentation is the primary output of this repository. Content sources live under `content/docs`:
 
-- **Installation** — Docker & Kubernetes install guides
+- **Installation** — Docker & Kubernetes install guides, and uninstallation
 - **Getting Started** — the COSY concept and creating your first game server
+- **Templates** — pre-configured game server templates and how they are sourced
 - **Configuration** — images/ports, environment variables, volumes, RCON, resource limits, execution commands
+- **User Management** — invitations, roles, and per-user resource limits
 - **Features** — dashboard & metrics, console, file management, access management, webhooks, public dashboard
 - **Guides** — task-oriented walkthroughs
 
@@ -188,7 +198,7 @@ Contributions are welcome! Contribution guidelines are being consolidated org-wi
 
 **Reporting bugs & requesting features:** Issues for the entire COSY project are centralized in the main repository. Please open bug reports and feature requests in **[Magenta-Mause/Cosy → Issues](https://github.com/Magenta-Mause/Cosy/issues/new/choose)**. (Note: issues opened directly on this repository are automatically redirected and closed.)
 
-**Pull requests** are made against this repository's `main` branch. Before opening a PR, please run `bun run lint` (enforced by CI) and `bun run types:check` (see the caveat in [Development workflow](#development-workflow)).
+**Pull requests** are made against this repository's `main` branch. Before opening a PR, please run `bun run lint`, `bun run types:check` and `bun run build` — all three are enforced by CI on every pull request.
 
 ---
 
