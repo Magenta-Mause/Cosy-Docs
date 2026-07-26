@@ -1,0 +1,205 @@
+---
+title: Activate HTTPS With a Domain
+description: Beginner-friendly walkthrough — get a domain, point it at your server, and run COSY behind automatic Let's Encrypt certificates.
+icon: Lock
+---
+
+This guide takes you from "COSY runs on an IP address" to `https://misty-castle.play.cosy-hosting.net` with a valid certificate — a padlock in the address bar, no browser warnings, and nothing to renew by hand.
+
+No prior knowledge of certificates, DNS, or reverse proxies is required. Every step is a form to fill in or a command to copy.
+
+## Why Bother With HTTPS?
+
+Without HTTPS, everything between your browser and your server travels as plain text that anyone on the same network — a shared WiFi, your hosting provider's network, any router along the way — can read or modify.
+
+For COSY specifically that means:
+
+- **Your admin password is exposed.** You type it into the login form on every visit. Over plain HTTP it is sent unencrypted, and whoever reads it owns your COSY instance — and with it every game server on the host.
+- **Your session token is exposed.** Even if nobody catches the password, the token your browser sends with each request is enough to impersonate you.
+- **Browsers flag the site.** Modern browsers mark plain-HTTP pages as "Not secure" and warn on every password field — which looks alarming to anyone you invite to your server.
+- **Nobody can tamper with the page.** HTTPS doesn't just hide traffic, it also guarantees the page you receive is the page COSY sent.
+
+Certificates are free and COSY renews them automatically, so there is no ongoing cost or maintenance.
+
+## What You'll Build
+
+```
+Browser: https://misty-castle.play.cosy-hosting.net
+        │
+        ▼  DNS A record → your server's public IP
+Your server, ports 80 + 443
+        │
+        ▼
+Caddy (cosy-caddy container)
+        │  fetches + renews a Let's Encrypt certificate automatically
+        ├── /api  → COSY backend
+        └── /     → COSY frontend
+```
+
+On **Kubernetes** the picture is the same, except [cert-manager](https://cert-manager.io/) and your Ingress controller take Caddy's place.
+
+## Prerequisites
+
+- A server with a **public IP address** — HTTPS certificates cannot be issued for a machine that Let's Encrypt cannot reach from the internet
+- **Ports 80 and 443 free** on that server, and open in its firewall (and in your hosting provider's firewall, if it has one)
+- An **email address** — Let's Encrypt uses it to warn you if a renewal ever fails
+- About 10 minutes
+
+> **Why port 80 too?** Let's Encrypt proves you control the domain by fetching a file from it over plain HTTP before it issues the certificate. COSY only uses port 80 to redirect visitors to HTTPS afterwards.
+
+## Step 1: Get a Domain
+
+A certificate is issued for a **name**, not for an IP address — so you need a domain first. Two ways to get one:
+
+### Option A: A Free Subdomain (recommended)
+
+The **[Cosy Domain Provider](https://domain-provider.cosy-hosting.net)** hands out free `*.play.cosy-hosting.net` subdomains:
+
+1. Register an account and verify your email address.
+2. Claim a subdomain. On the **free plan** the name is generated for you as a two-word label like `misty-castle`, giving you `misty-castle.play.cosy-hosting.net`. **Plus** accounts can pick a custom label instead.
+3. Set the **Target IP** to your server's public IP address.
+
+That's the whole DNS part — the record is created for you. The subdomain starts as **PENDING** and flips to **ACTIVE** once it is live, usually within a minute.
+
+### Option B: Rent Your Own Domain
+
+If you'd rather have a name of your own — `cosy.example.com` — buy one from any registrar (Namecheap, Porkbun, INWX, Cloudflare and many others sell domains from roughly €5–15 per year). Then, in your registrar's DNS settings, create a single record:
+
+| Field | Value |
+| --- | --- |
+| Type | `A` |
+| Name / Host | `cosy` (for `cosy.example.com`), or `@` for the bare domain |
+| Value / Points to | your server's public IP address |
+| TTL | leave at the default |
+
+If your server has an IPv6 address as well, add the same record as type `AAAA` with the IPv6 address.
+
+### Check That It Worked
+
+Whichever option you chose, confirm the name resolves to your server before continuing:
+
+```bash
+dig +short cosy.example.com
+```
+
+The output should be exactly your server's public IP address. If it's empty, DNS hasn't propagated yet — wait a few minutes and try again. **Don't move on until this returns the right IP**, because the certificate request will fail otherwise.
+
+## Step 2: Install COSY With TLS Enabled
+
+Run the [install script](/docs/installation) as usual. Three prompts matter here.
+
+Answer **y** when it asks about TLS:
+
+```
+Enable TLS/HTTPS via Let's Encrypt? [y/N]: y
+```
+
+Enter the address where Let's Encrypt should reach you:
+
+```
+Email for Let's Encrypt notifications: you@example.com
+```
+
+And enter your domain — **without** `https://` and without a trailing slash:
+
+```
+Domain [default: your-hostname]: cosy.example.com
+```
+
+That's it. The port prompt is skipped in TLS mode: COSY listens on the standard ports 80 and 443.
+
+> **Prefer a one-liner?** The same thing non-interactively:
+> ```bash
+> sudo ./install_cosy.sh docker --tls --tls-email you@example.com --domain cosy.example.com
+> ```
+
+The installer then downloads a [Caddy](https://caddyserver.com/) configuration with your domain and email filled in, and starts COSY with the `cosy-caddy` container in front of it. On **Kubernetes** it instead sets up cert-manager with a Let's Encrypt ClusterIssuer, offering to install cert-manager first if your cluster doesn't have it.
+
+For the remaining prompts — installation path, admin username, footer details — see the [Docker](/docs/installation/docker) or [Kubernetes](/docs/installation/kubernetes) walkthrough.
+
+## Step 3: Open Your Site
+
+When the installer finishes it prints the access URL:
+
+```
+  ── Access URL ────────────────────────────────────────
+  COSY:               https://cosy.example.com
+```
+
+Open it. The first request may take a few seconds while the certificate is issued. You should see the COSY login page with a padlock in the address bar — that padlock is the whole point.
+
+Log in with the admin credentials from the installer output, and **save that password**; it is shown only once.
+
+> Visiting `http://cosy.example.com` now redirects to HTTPS automatically, so old bookmarks keep working.
+
+## Already Installed Without HTTPS?
+
+The installer configures TLS at install time; there is no "turn it on later" prompt. You have two options.
+
+**The simple way — reinstall.** [Uninstall COSY](/docs/installation/uninstallation) and run the installer again with TLS enabled. Note that uninstalling removes your game servers and their data, so this is best while your instance is still fresh.
+
+**Keeping your data — switch the stack by hand.** COSY's Docker Compose stack ships both proxies and picks one via a profile, so you can flip the switch yourself. Substitute your own installation path, domain and email:
+
+```bash
+sudo systemctl stop cosy
+cd /opt/cosy/config
+
+# Fetch the Caddy config for the COSY version you installed
+TAG=$(grep '^COSY_TAG=' .env | cut -d= -f2)
+sudo curl -fL -o Caddyfile \
+  "https://raw.githubusercontent.com/Magenta-Mause/Cosy/${TAG}/config/docker/Caddyfile"
+
+# Fill in your domain + email
+sudo sed -i 's|DOMAIN_PLACEHOLDER|cosy.example.com|g; s|EMAIL_PLACEHOLDER|you@example.com|g' Caddyfile
+```
+
+Then edit `.env` in the same directory and change these four values:
+
+```bash
+COMPOSE_PROFILES=tls
+DOMAIN=cosy.example.com
+COSY_CORS_ALLOWED_ORIGINS=https://cosy.example.com,http://cosy.example.com
+COSY_CUSTOM_METRICS_BASE_URL=https://cosy.example.com
+```
+
+Make sure nothing else occupies ports 80 and 443 — the old `cosy-nginx` container will be replaced by `cosy-caddy` — then start COSY again:
+
+```bash
+sudo systemctl start cosy
+```
+
+## Renewals
+
+There are none to do. Let's Encrypt certificates are valid for 90 days and Caddy (or cert-manager on Kubernetes) renews them well before they expire, as long as your domain keeps pointing at the server and ports 80/443 stay reachable. Let's Encrypt emails the address you provided if a renewal ever fails.
+
+## Troubleshooting
+
+| Symptom | Likely cause |
+| --- | --- |
+| Installer aborts: *Port 80/443 is already in use* | Another web server (nginx, Apache, Traefik) or an older COSY install holds the port — stop it, then rerun the installer |
+| Browser shows *"Your connection is not private"* | The certificate hasn't been issued yet. Check `docker logs cosy-caddy` — the usual cause is DNS not pointing at this server, or port 80 blocked by a firewall |
+| `dig +short <domain>` returns nothing or the wrong IP | The DNS record is missing, still propagating, or has the wrong target IP — fix it and wait a few minutes before retrying |
+| Certificate error mentioning *rate limit* | Let's Encrypt limits repeated failed attempts for the same domain. Fix the underlying problem (usually DNS or the firewall), then wait an hour before trying again |
+| Page loads but stays blank / API calls fail | `COSY_CORS_ALLOWED_ORIGINS` in `config/.env` doesn't match the URL you're visiting — it must contain your `https://` domain |
+| Installer refuses: *ClusterIssuer already exists* (Kubernetes) | Your cluster already has a Let's Encrypt ClusterIssuer not managed by COSY. Rename or remove it, or rerun with TLS disabled and wire COSY into your existing issuer |
+| Certificate works, but you reach it only via IP | Certificates are issued for names — use the domain in the address bar, not the IP |
+
+## Next Steps
+
+<Cards>
+  <Card
+    title="Minecraft Under Your Own Domain"
+    href="/docs/guides/minecraft-domain"
+    description="Give each Minecraft server its own hostname via the MC-Router proxy."
+  />
+  <Card
+    title="Docker Installation"
+    href="/docs/installation/docker"
+    description="The full walkthrough of every installer prompt."
+  />
+  <Card
+    title="Kubernetes Installation"
+    href="/docs/installation/kubernetes"
+    description="Installing COSY on an existing cluster with cert-manager."
+  />
+</Cards>
