@@ -1,4 +1,4 @@
 {
   "title": "Installation",
-  "pages": ["index", "docker", "kubernetes", "uninstallation"]
+  "pages": ["docker", "kubernetes", "uninstallation"]
 }
