@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: cosy-landing-page
-          image: ghcr.io/magenta-mause/cosy-docs:sha-2e9aae2
+          image: ghcr.io/magenta-mause/cosy-docs:sha-976fb00
           imagePullPolicy: Always
           ports:
             - containerPort: 80
